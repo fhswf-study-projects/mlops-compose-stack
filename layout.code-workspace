@@ -1,0 +1,20 @@
+{
+    "folders": [
+        {
+            "path": "./",
+            "name": "Compose Stack"
+        },
+        {
+            "path": "./services/data-processor",
+            "name": "Data Processor",
+        },
+        {
+            "path": "./services/pipeline-api",
+            "name": "Pipeline API",
+        },
+        {
+            "path": "./services/streamlit-ui",
+            "name": "Streamlit UI",
+        },
+    ]
+}
