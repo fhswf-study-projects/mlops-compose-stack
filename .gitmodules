@@ -1,0 +1,11 @@
+[submodule "Data Processor"]
+	path = services/data-processor
+	url = https://github.com/fhswf-study-projects/mlops-data-processor
+
+[submodule "Pipeline API"]
+	path = services/pipeline-api
+	url = https://github.com/fhswf-study-projects/mlops-pipeline-api
+
+[submodule "Streamlit UI"]
+	path = services/streamlit-ui
+	url = https://github.com/fhswf-study-projects/mlops-streamlit-ui
