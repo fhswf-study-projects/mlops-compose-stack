@@ -1,6 +1,6 @@
 services:
   nginx-proxy:
-    # restart: always
+    restart: always
     image: jwilder/nginx-proxy:latest
     ports:
       - "${NGINX_PORT}:80"
@@ -12,7 +12,7 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   rabbitmq:
-    # restart: always
+    restart: always
     image: rabbitmq:3.9.13-alpine
     ports:
       - "${RABBITMQ_PORT}:5672"
@@ -35,8 +35,16 @@ services:
       timeout: 30s
       retries: 3
 
+  wait-for-rabbitmq:
+    image: atkrad/wait4x
+    depends_on:
+      - rabbitmq
+    command: rabbitmq "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/" -t 90s -i 2000ms
+    networks:
+      - backend
+
   postgres:
-    # restart: always
+    restart: always
     image: postgres
     ports:
       - ${PG_PORT}:5432
@@ -52,6 +60,8 @@ services:
       - PG_CELERY_USER=${PG_CELERY_USER}
       - PG_CELERY_PASSWORD=${PG_CELERY_PASSWORD}
       - PG_CELERY_DB=${PG_CELERY_DATABASE}
+      - OTEL_USER=${OTEL_USER}
+      - OTEL_PASSWORD=${OTEL_PASSWORD}
     volumes:
       - ./configs/postgres/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
       - postgres_data:/var/lib/postgresql/data/
@@ -61,23 +71,27 @@ services:
       timeout: 5s
       retries: 3
 
+  wait-for-postgres:
+    image: atkrad/wait4x
+    depends_on:
+      - postgres
+    command: postgresql "postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}?sslmode=disable" -t 90s -i 2000ms
+    networks:
+      - backend
+
   s3:
-    # restart: always
+    restart: always
     image: minio/minio:latest
-    ports:
-      - "${MINIO_PORT}:9000"
-      - "${MINIO_CONSOLE_PORT}:9001"
     networks:
       - frontend
       - backend
     environment:
       - VIRTUAL_HOST=s3.localhost
       - VIRTUAL_PORT=9001
-      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_ACCESS_KEY}
-      - MINIO_ADDRESS=${MINIO_ADDRESS}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - MINIO_PORT=${MINIO_PORT}
-      - MINIO_STORAGE_USE_HTTPS=${MINIO_STORAGE_USE_HTTPS}
+      - MINIO_ADDRESS=${MINIO_ADDRESS}
       - MINIO_CONSOLE_ADDRESS=${MINIO_CONSOLE_ADDRESS}
     volumes:
       - minio_data:/data
@@ -88,41 +102,45 @@ services:
       timeout: 20s
       retries: 3
 
+  createbuckets:
+    image: minio/mc
+    networks:
+      - backend
+    depends_on:
+      - s3
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add myminio http://s3:${MINIO_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME};
+      /usr/bin/mc mb myminio/${DVC_BUCKET_NAME};
+      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_KEY}" myminio ${MINIO_ROOT_USER};
+      exit 0;
+      "
+
   mlflow-server:
-    # restart: always
+    restart: always
     build:
-      context: ./services/mlflow-server/
-      dockerfile: Dockerfile
-    ports:
-      - "${MLFLOW_PORT}:5000"
+      context: .
+      dockerfile: Dockerfile.mlflow
     networks:
       - frontend
       - backend
     environment:
       - VIRTUAL_HOST=mlflow.localhost
       - VIRTUAL_PORT=5000
+      - PORT=5000
       - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
-      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
       - MLFLOW_S3_ENDPOINT_URL=http://s3:${MINIO_PORT}
       - MLFLOW_S3_IGNORE_TLS=${MLFLOW_S3_IGNORE_TLS}
+      - BACKEND_STORE_URI=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
+      - ARTIFACTS_DESTINATION=s3://${MLFLOW_BUCKET_NAME}
     depends_on:
-      - s3
-      - postgres
-    command: [
-      "mlflow",
-      "server",
-      "--backend-store-uri=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}",
-      "--host=0.0.0.0",
-      "--serve-artifacts",
-      "--artifacts-destination=s3://${MLFLOW_BUCKET_NAME}"
-    ]
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:${MLFLOW_PORT}/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      wait-for-postgres:
+        condition: service_completed_successfully
 
   otel-lgtm:
+    restart: always
     image: grafana/otel-lgtm:latest
     ports:
       - "${GRAFANA_PORT}:3000"
@@ -131,17 +149,29 @@ services:
     networks:
       - frontend
       - backend
-      - nginx_proxy
     environment:
       - VIRTUAL_HOST=monitoring.localhost
       - VIRTUAL_PORT=3000
       - GF_SECURITY_ADMIN_USER=${GF_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_PASSWORD}
       - GF_PATHS_DATA=/data/grafana
+      - RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASSWORD}
+      - RABBITMQ_PORT=${RABBITMQ_API_PORT}
+      - OTEL_USER=${OTEL_USER}
+      - OTEL_PASSWORD=${OTEL_PASSWORD}
+      - ENABLE_LOGS_OTELCOL=true
     volumes:
+      - ./collector/collector-config.yaml:/otel-lgtm/otelcol-config.yaml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - loki_data:/data/loki
       - grafana_data:/data/grafana
       - prometheus_data:/data/prometheus
+    depends_on:
+      wait-for-postgres:
+        condition: service_completed_successfully
+      wait-for-rabbitmq:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${GRAFANA_PORT}/api/health"]
       interval: 30s
@@ -158,18 +188,16 @@ services:
       - VIRTUAL_HOST=celery.localhost
       - VIRTUAL_PORT=5555
       - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
+      - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_API_PORT}/api/
     depends_on:
-      - s3
-      - rabbitmq
-    command: [
-      "celery",
-      "--broker=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/",
-      "flower",
-      "--broker-api=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_API_PORT}/api/"
-    ]
+      wait-for-rabbitmq:
+        condition: service_completed_successfully
 
   # Services
   pipeline-api:
+    restart: always
+    image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:latest
     build:
       context: ./services/pipeline-api/
       dockerfile: Dockerfile
@@ -185,7 +213,12 @@ services:
       - backend
     environment:
       - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=3000
+      - VIRTUAL_PORT=8080
+      - S3_ENDPOINT_URL=s3://${MLFLOW_BUCKET_NAME}
+      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
+      - CELERY_BROKER_CONNECTION=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
+      - CELERY_BACKEND_CONNECTION=db+postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
     env_file:
       - ./services/pipeline-api/.env
     depends_on:
@@ -194,6 +227,8 @@ services:
       - s3
 
   streamlit-ui:
+    restart: always
+    image: ghcr.io/fhswf-study-projects/mlops-streamli-ui:latest
     build:
       context: ./services/streamlit-ui/
       dockerfile: Dockerfile
@@ -207,27 +242,14 @@ services:
     networks:
       - frontend
       - nginx_proxy
-    environment:
-      - VIRTUAL_HOST=ui.localhost
-      - VIRTUAL_PORT=8501
-    command: [
-      "streamlit",
-      "run",
-      "main.py",
-      "> /dev/null"
-    ]
     env_file:
       - ./services/streamlit-ui/.env
     depends_on:
+      - otel-lgtm
       - pipeline-api
-      - postgres
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:${STREAMLIT_APP_PORT}/_stcore/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
 
   data-processor:
+    image: ghcr.io/fhswf-study-projects/mlops-data-processor:latest
     build:
       context: ./services/data-processor/
       dockerfile: Dockerfile
@@ -240,12 +262,19 @@ services:
           target: /usr/src/app
     networks:
       - backend
+    environment:
+      - S3_ENDPOINT_URL=s3://${DVC_BUCKET_NAME}
+      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
+      - CELERY_BROKER_CONNECTION=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
+      - CELERY_BACKEND_CONNECTION=db+postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
     env_file:
       - ./services/data-processor/.env
     depends_on:
-      - s3
-      - rabbitmq
-      - postgres
+      wait-for-postgres:
+        condition: service_completed_successfully
+      wait-for-rabbitmq:
+        condition: service_completed_successfully
 
 # # Use it for container debugging
 # # Remove comments for starting with remote debugger
