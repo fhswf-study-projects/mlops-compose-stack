@@ -27,12 +27,14 @@ jobs:
         uses: appleboy/ssh-action@v0.1.3
         env:
           DEPLOY_ENV: ${{ env.DEPLOY_ENV }}
+          LETSENCRYPT_DEFAULT_EMAIL: ${{ secrets.LETSENCRYPT_DEFAULT_EMAIL }}
 
           OTEL_VERSION_TAG: ${{ vars.OTEL_VERSION_TAG }}
           MINIO_VERSION_TAG: ${{ vars.MINIO_VERSION_TAG }}
           POSTGRES_VERSION_TAG: ${{ vars.POSTGRES_VERSION_TAG }}
           RABBITMQ_VERSION_TAG: ${{ vars.RABBITMQ_VERSION_TAG }}
           NGINX_PROXY_VERSION_TAG: ${{ vars.NGINX_PROXY_VERSION_TAG }}
+          ACME_COMPANION_VERSION_TAG: ${{ vars.ACME_COMPANION_VERSION_TAG }}
 
           S3_VIRTUAL_HOST: ${{ secrets.S3_VIRTUAL_HOST }}
           S3_VIRTUAL_PORT: ${{ secrets.S3_VIRTUAL_PORT }}
