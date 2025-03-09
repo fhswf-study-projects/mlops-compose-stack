@@ -68,9 +68,9 @@ jobs:
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
           MINIO_CONSOLE_ADDRESS: ${{ vars.MINIO_CONSOLE_ADDRESS }}
-          GF_PORT: ${{ secrets.RABBITMQ_PORT }}
-          GF_USER: ${{ secrets.RABBITMQ_PORT }}
-          GF_PASSWORD: ${{ secrets.RABBITMQ_PORT }}
+          GF_PORT: ${{ secrets.GF_PORT }}
+          GF_USER: ${{ secrets.GF_USER }}
+          GF_PASSWORD: ${{ secrets.GF_PASSWORD }}
           GF_PATHS_DATA: ${{ vars.GF_PATHS_DATA }}
         with:
           host: ${{ secrets.DEPLOYMENT_VPS_HOST }}
