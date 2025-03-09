@@ -3,11 +3,11 @@ name: Deploy to VPS
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "staging", "main" ]
 
 env:
   # Use for multi-branch deployment
-  APP_ENV: ${{ github.head_ref || github.ref_name }}
+  DEPLOY_ENV: ${{ github.head_ref || github.ref_name }}
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
@@ -17,6 +17,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
+    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
     permissions:
       contents: read
     steps:
@@ -32,9 +33,7 @@ jobs:
           timeout: 180s
           script: |
             echo "Connected to VPS successfully!"
-            cd ~ && mkdir -p deploy-docker
-            cd deploy-docker
-            wget https://raw.githubusercontent.com/${{ env.REPO_NAME }}/main/docker-compose.yaml -O ~/deploy-docker/docker-compose.yaml
+            wget https://raw.githubusercontent.com/${{ env.REPO_NAME }}/{{ env.DEPLOY_ENV }}/docker-compose.yaml -O ~/docker-compose.yaml
             docker-compose pull --include-deps
             docker-compose up -d
             echo "Deployed to VPS successfully!"
