@@ -47,8 +47,6 @@ jobs:
 
           MLFLOW_VIRTUAL_HOST: ${{ secrets.MLFLOW_VIRTUAL_HOST }}
           MLFLOW_VIRTUAL_PORT: ${{ secrets.MLFLOW_VIRTUAL_PORT }}
-        
-          NGINX_PORT: ${{ secrets.NGINX_PORT }}
           
           RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
           RABBITMQ_DEFAULT_PASSWORD: ${{ secrets.RABBITMQ_DEFAULT_PASSWORD }}
