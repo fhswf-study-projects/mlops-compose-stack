@@ -28,60 +28,46 @@ jobs:
         env:
           DEPLOY_ENV: ${{ env.DEPLOY_ENV }}
           LETSENCRYPT_DEFAULT_EMAIL: ${{ secrets.LETSENCRYPT_DEFAULT_EMAIL }}
-
           OTEL_VERSION_TAG: ${{ vars.OTEL_VERSION_TAG }}
           MINIO_VERSION_TAG: ${{ vars.MINIO_VERSION_TAG }}
           POSTGRES_VERSION_TAG: ${{ vars.POSTGRES_VERSION_TAG }}
           RABBITMQ_VERSION_TAG: ${{ vars.RABBITMQ_VERSION_TAG }}
           NGINX_PROXY_VERSION_TAG: ${{ vars.NGINX_PROXY_VERSION_TAG }}
           ACME_COMPANION_VERSION_TAG: ${{ vars.ACME_COMPANION_VERSION_TAG }}
-
           S3_VIRTUAL_HOST: ${{ secrets.S3_VIRTUAL_HOST }}
           S3_VIRTUAL_PORT: ${{ secrets.S3_VIRTUAL_PORT }}
-
           RABBITMQ_VIRTUAL_HOST: ${{ secrets.RABBITMQ_VIRTUAL_HOST }}
           RABBITMQ_VIRTUAL_PORT: ${{ secrets.RABBITMQ_VIRTUAL_PORT }}
-
           OTEL_VIRTUAL_HOST: ${{ secrets.OTEL_VIRTUAL_HOST }}
           OTEL_VIRTUAL_PORT: ${{ secrets.OTEL_VIRTUAL_PORT }}
-
           MLFLOW_VIRTUAL_HOST: ${{ secrets.MLFLOW_VIRTUAL_HOST }}
           MLFLOW_VIRTUAL_PORT: ${{ secrets.MLFLOW_VIRTUAL_PORT }}
-          
           RABBITMQ_DEFAULT_USER: ${{ secrets.RABBITMQ_DEFAULT_USER }}
           RABBITMQ_DEFAULT_PASSWORD: ${{ secrets.RABBITMQ_DEFAULT_PASSWORD }}
           RABBITMQ_PORT: ${{ secrets.RABBITMQ_PORT }}
           RABBITMQ_API_PORT: ${{ secrets.RABBITMQ_API_PORT }}
-          
           PG_USER: ${{ secrets.PG_USER }}
           PG_PASSWORD: ${{ secrets.PG_PASSWORD }}
           PG_DATABASE: ${{ vars.PG_DATABASE }}
           PG_PORT: ${{ secrets.PG_PORT }}
-          
           PG_MLFLOW_USER: ${{ secrets.PG_MLFLOW_USER }}
           PG_MLFLOW_PASSWORD: ${{ secrets.PG_MLFLOW_PASSWORD }}
           PG_MLFLOW_DATABASE: ${{ vars.PG_MLFLOW_DATABASE }}
-          
           PG_CELERY_USER: ${{ secrets.PG_CELERY_USER }}
           PG_CELERY_PASSWORD: ${{ secrets.PG_CELERY_PASSWORD }}
           PG_CELERY_DATABASE: ${{ vars.PG_CELERY_DATABASE }}
-          
           OTEL_USER: ${{ secrets.OTEL_USER }}
           OTEL_PASSWORD: ${{ secrets.OTEL_PASSWORD }}
-          
           MLFLOW_PORT: ${{ secrets.MLFLOW_PORT }}
           MLFLOW_BUCKET_NAME: ${{ vars.MLFLOW_BUCKET_NAME }}
           MLFLOW_S3_IGNORE_TLS: ${{ vars.MLFLOW_S3_IGNORE_TLS }}
           DVC_BUCKET_NAME: ${{ vars.DVC_BUCKET_NAME }}
           CELERY_DATA_HOLDER_BUCKET_NAME: ${{ vars.CELERY_DATA_HOLDER_BUCKET_NAME }}
-          
           MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
-          
           MINIO_ROOT_USER: ${{ secrets.MINIO_ROOT_USER }}
           MINIO_ROOT_PASSWORD: ${{ secrets.MINIO_ROOT_PASSWORD }}
           MINIO_CONSOLE_ADDRESS: ${{ vars.MINIO_CONSOLE_ADDRESS }}
-          
           GF_PORT: ${{ secrets.RABBITMQ_PORT }}
           GF_USER: ${{ secrets.RABBITMQ_PORT }}
           GF_PASSWORD: ${{ secrets.RABBITMQ_PORT }}
