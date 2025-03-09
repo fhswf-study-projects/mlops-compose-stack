@@ -111,8 +111,9 @@ services:
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add myminio http://s3:${MINIO_PORT} ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
-      /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME};
-      /usr/bin/mc mb myminio/${DVC_BUCKET_NAME};
+      /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME} --ignore-existing;
+      /usr/bin/mc mb myminio/${DVC_BUCKET_NAME} --ignore-existing --with-versioning;
+      /usr/bin/mc mb myminio/${CELERY_DATA_HOLDER_BUCKET_NAME} --ignore-existing --with-versioning;
       /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_KEY}" myminio ${MINIO_ROOT_USER};
       exit 0;
       "
@@ -178,21 +179,21 @@ services:
       timeout: 10s
       retries: 3
 
-  flower:
-    # restart: always
-    image: mher/flower
-    networks:
-      - frontend
-      - backend
-    environment:
-      - VIRTUAL_HOST=celery.localhost
-      - VIRTUAL_PORT=5555
-      - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
-      - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_API_PORT}/api/
-    depends_on:
-      wait-for-rabbitmq:
-        condition: service_completed_successfully
+  # flower:
+  #   # restart: always
+  #   image: mher/flower
+  #   networks:
+  #     - frontend
+  #     - backend
+  #   environment:
+  #     - VIRTUAL_HOST=celery.localhost
+  #     - VIRTUAL_PORT=5555
+  #     - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
+  #     - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
+  #     - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_API_PORT}/api/
+  #   depends_on:
+  #     wait-for-rabbitmq:
+  #       condition: service_completed_successfully
 
   # Services
   pipeline-api:
@@ -211,14 +212,6 @@ services:
     networks:
       - frontend
       - backend
-    environment:
-      - VIRTUAL_HOST=api.localhost
-      - VIRTUAL_PORT=8080
-      - S3_ENDPOINT_URL=s3://${MLFLOW_BUCKET_NAME}
-      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
-      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
-      - CELERY_BROKER_CONNECTION=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
-      - CELERY_BACKEND_CONNECTION=db+postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
     env_file:
       - ./services/pipeline-api/.env
     depends_on:
@@ -241,7 +234,6 @@ services:
           target: /usr/src/app
     networks:
       - frontend
-      - nginx_proxy
     env_file:
       - ./services/streamlit-ui/.env
     depends_on:
@@ -262,12 +254,6 @@ services:
           target: /usr/src/app
     networks:
       - backend
-    environment:
-      - S3_ENDPOINT_URL=s3://${DVC_BUCKET_NAME}
-      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
-      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
-      - CELERY_BROKER_CONNECTION=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/
-      - CELERY_BACKEND_CONNECTION=db+postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
     env_file:
       - ./services/data-processor/.env
     depends_on:
@@ -296,6 +282,4 @@ networks:
   frontend:
     driver: bridge
   backend:
-    driver: bridge
-  nginx_proxy:
     driver: bridge
