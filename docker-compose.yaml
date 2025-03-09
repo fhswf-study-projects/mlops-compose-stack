@@ -1,7 +1,7 @@
 services:
   nginx-proxy:
     restart: always
-    image: jwilder/nginx-proxy:latest
+    image: jwilder/nginx-proxy:${NGINX_PROXY_VERSION_TAG}
     ports:
       - "${NGINX_PORT}:80"
     networks:
@@ -13,14 +13,14 @@ services:
 
   rabbitmq:
     restart: always
-    image: rabbitmq:3.9.13-alpine
+    image: rabbitmq:${RABBITMQ_VERSION_TAG}
     ports:
       - "${RABBITMQ_PORT}:5672"
     networks:
       - backend
     environment:
-      - VIRTUAL_HOST=rabbitmq.localhost
-      - VIRTUAL_PORT=${RABBITMQ_API_PORT}
+      - VIRTUAL_HOST=${RABBITMQ_VIRTUAL_HOST}
+      - VIRTUAL_PORT=${RABBITMQ_VIRTUAL_PORT}
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASSWORD}
     volumes:
@@ -42,12 +42,12 @@ services:
     command: rabbitmq "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:${RABBITMQ_PORT}/" -t 90s -i 2000ms
     networks:
       - backend
-
+  
   postgres:
     restart: always
-    image: postgres
+    image: postgres:${POSTGRES_VERSION_TAG}
     ports:
-      - ${PG_PORT}:5432
+      - "${PG_PORT}:5432"
     networks:
       - backend
     environment:
@@ -81,17 +81,15 @@ services:
 
   s3:
     restart: always
-    image: minio/minio:latest
+    image: minio/minio:${MINIO_VERSION_TAG}
     networks:
       - frontend
       - backend
     environment:
-      - VIRTUAL_HOST=s3.localhost
-      - VIRTUAL_PORT=9001
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-      - MINIO_PORT=${MINIO_PORT}
-      - MINIO_ADDRESS=${MINIO_ADDRESS}
+      - VIRTUAL_HOST=${S3_VIRTUAL_HOST}
+      - VIRTUAL_PORT=${S3_VIRTUAL_PORT}
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_ACCESS_KEY}
       - MINIO_CONSOLE_ADDRESS=${MINIO_CONSOLE_ADDRESS}
     volumes:
       - minio_data:/data
@@ -117,21 +115,23 @@ services:
       /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_KEY}" myminio ${MINIO_ROOT_USER};
       exit 0;
       "
-
+  
   mlflow-server:
     restart: always
     build:
       context: .
       dockerfile: Dockerfile.mlflow
+    ports:
+      - "${MLFLOW_PORT}:5000"
     networks:
       - frontend
       - backend
     environment:
-      - VIRTUAL_HOST=mlflow.localhost
-      - VIRTUAL_PORT=5000
-      - PORT=5000
+      - VIRTUAL_HOST=${MLFLOW_VIRTUAL_HOST}
+      - VIRTUAL_PORT=${MLFLOW_VIRTUAL_PORT}
+      - PORT=${MLFLOW_VIRTUAL_PORT}
       - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
-      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
       - MLFLOW_S3_ENDPOINT_URL=http://s3:${MINIO_PORT}
       - MLFLOW_S3_IGNORE_TLS=${MLFLOW_S3_IGNORE_TLS}
       - BACKEND_STORE_URI=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:${PG_PORT}/${PG_MLFLOW_DATABASE}
@@ -141,7 +141,6 @@ services:
         condition: service_completed_successfully
 
   otel-lgtm:
-    restart: always
     image: grafana/otel-lgtm:latest
     ports:
       - "${GRAFANA_PORT}:3000"
@@ -150,18 +149,19 @@ services:
     networks:
       - frontend
       - backend
+      - nginx_proxy
     environment:
-      - VIRTUAL_HOST=monitoring.localhost
-      - VIRTUAL_PORT=3000
+      - VIRTUAL_HOST=${OTEL_VIRTUAL_HOST}
+      - VIRTUAL_PORT=${OTEL_VIRTUAL_PORT}
       - GF_SECURITY_ADMIN_USER=${GF_USER}
       - GF_SECURITY_ADMIN_PASSWORD=${GF_PASSWORD}
-      - GF_PATHS_DATA=/data/grafana
+      - GF_PATHS_DATA=${GF_PATHS_DATA}
       - RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASSWORD}
       - RABBITMQ_PORT=${RABBITMQ_API_PORT}
       - OTEL_USER=${OTEL_USER}
       - OTEL_PASSWORD=${OTEL_PASSWORD}
-      - ENABLE_LOGS_OTELCOL=true
+      - ENABLE_LOGS_OTELCOL=${ENABLE_LOGS_OTELCOL}
     volumes:
       - ./collector/collector-config.yaml:/otel-lgtm/otelcol-config.yaml
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -198,7 +198,7 @@ services:
   # Services
   pipeline-api:
     restart: always
-    image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:latest
+    image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
     build:
       context: ./services/pipeline-api/
       dockerfile: Dockerfile
@@ -221,7 +221,7 @@ services:
 
   streamlit-ui:
     restart: always
-    image: ghcr.io/fhswf-study-projects/mlops-streamli-ui:latest
+    image: ghcr.io/fhswf-study-projects/mlops-streamli-ui:${DEPLOY_ENV}
     build:
       context: ./services/streamlit-ui/
       dockerfile: Dockerfile
@@ -239,9 +239,14 @@ services:
     depends_on:
       - otel-lgtm
       - pipeline-api
+    env_file:
+      - ./services/streamlit-ui/.env
+    depends_on:
+      - pipeline-api
+      - postgres
 
   data-processor:
-    image: ghcr.io/fhswf-study-projects/mlops-data-processor:latest
+    image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
     build:
       context: ./services/data-processor/
       dockerfile: Dockerfile
