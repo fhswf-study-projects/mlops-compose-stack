@@ -132,7 +132,7 @@ services:
       /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME} --ignore-existing;
       /usr/bin/mc mb myminio/${DVC_BUCKET_NAME} --ignore-existing --with-versioning;
       /usr/bin/mc mb myminio/${CELERY_DATA_HOLDER_BUCKET_NAME} --ignore-existing --with-versioning;
-      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_KEY}" myminio ${MINIO_ROOT_USER};
+      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_ACCESS_KEY}" myminio ${MINIO_ROOT_USER};
       exit 0;
       "
   
