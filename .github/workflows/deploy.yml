@@ -17,7 +17,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
-    environment: 'production'
+    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
     permissions:
       contents: read
     steps:
@@ -35,8 +35,6 @@ jobs:
             echo "Connected to VPS successfully!"
             sleep 10s
             echo "exporing variables and env variables"
-            export DEPLOY_ENV=${{ env.DEPLOY_ENV }}
-            export REPO_NAME=${{ env.REPO_NAME }}
             export LETSENCRYPT_DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_DEFAULT_EMAIL }}
             export OTEL_VERSION_TAG=${{ vars.OTEL_VERSION_TAG }}
             export MINIO_VERSION_TAG=${{ vars.MINIO_VERSION_TAG }}
@@ -71,7 +69,7 @@ jobs:
             export CELERY_DATA_HOLDER_BUCKET_NAME=${{ vars.CELERY_DATA_HOLDER_BUCKET_NAME }}
             export GF_USER=${{ secrets.GF_USER }}
             export GF_PASSWORD=${{ secrets.GF_PASSWORD }}
-            git clone -b staging --single-branch https://github.com/fhswf-study-projects/mlops-compose-stack.git
+            git clone -b ${{ env.DEPLOY_ENV }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
             docker compose pull -q
