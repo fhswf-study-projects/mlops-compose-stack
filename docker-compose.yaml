@@ -22,7 +22,7 @@ services:
     networks:
       - backend
     environment:
-      DEFAULT_EMAIL=${LETSENCRYPT_DEFAULT_EMAIL}
+      - DEFAULT_EMAIL=${LETSENCRYPT_DEFAULT_EMAIL}
     volumes:
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
@@ -132,7 +132,7 @@ services:
       /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME} --ignore-existing;
       /usr/bin/mc mb myminio/${DVC_BUCKET_NAME} --ignore-existing --with-versioning;
       /usr/bin/mc mb myminio/${CELERY_DATA_HOLDER_BUCKET_NAME} --ignore-existing --with-versioning;
-      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_KEY}" myminio ${MINIO_ROOT_USER};
+      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_ACCESS_KEY}" myminio ${MINIO_ROOT_USER};
       exit 0;
       "
   
@@ -162,7 +162,7 @@ services:
         condition: service_completed_successfully
 
   otel-lgtm:
-    image: grafana/otel-lgtm:latest
+    image: grafana/otel-lgtm:${OTEL_VERSION_TAG}
     ports:
       - "${GRAFANA_PORT}:3000"
       - "4317:4317"
@@ -233,8 +233,8 @@ services:
     networks:
       - frontend
       - backend
-    env_file:
-      - ./services/pipeline-api/.env
+    # env_file:
+    #   - ./services/pipeline-api/.env
     depends_on:
       - postgres
       - rabbitmq
@@ -242,7 +242,7 @@ services:
 
   streamlit-ui:
     restart: always
-    image: ghcr.io/fhswf-study-projects/mlops-streamli-ui:${DEPLOY_ENV}
+    image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
     build:
       context: ./services/streamlit-ui/
       dockerfile: Dockerfile
@@ -255,16 +255,11 @@ services:
           target: /usr/src/app
     networks:
       - frontend
-    env_file:
-      - ./services/streamlit-ui/.env
+    # env_file:
+    #   - ./services/streamlit-ui/.env
     depends_on:
       - otel-lgtm
       - pipeline-api
-    env_file:
-      - ./services/streamlit-ui/.env
-    depends_on:
-      - pipeline-api
-      - postgres
 
   data-processor:
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
@@ -280,8 +275,8 @@ services:
           target: /usr/src/app
     networks:
       - backend
-    env_file:
-      - ./services/data-processor/.env
+    # env_file:
+    #   - ./services/data-processor/.env
     depends_on:
       wait-for-postgres:
         condition: service_completed_successfully
