@@ -242,7 +242,7 @@ services:
 
   streamlit-ui:
     restart: always
-    image: ghcr.io/fhswf-study-projects/mlops-streamli-ui:${DEPLOY_ENV}
+    image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
     build:
       context: ./services/streamlit-ui/
       dockerfile: Dockerfile
