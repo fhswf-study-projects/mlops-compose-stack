@@ -260,11 +260,6 @@ services:
     depends_on:
       - otel-lgtm
       - pipeline-api
-    env_file:
-      - ./services/streamlit-ui/.env
-    depends_on:
-      - pipeline-api
-      - postgres
 
   data-processor:
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
