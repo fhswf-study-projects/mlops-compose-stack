@@ -89,5 +89,3 @@ jobs:
             echo "Cleaning up..."
             rm ~/docker-compose.yaml
             echo "Deployment to VPS successful!"
-
-            echo "Deployed to VPS successfully!"
