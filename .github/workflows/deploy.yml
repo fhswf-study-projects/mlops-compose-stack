@@ -145,9 +145,13 @@ jobs:
             export GF_PASSWORD=${{ secrets.GF_PASSWORD }}
             export GF_PATHS_DATA=${{ vars.GF_PATHS_DATA }}
             export ENABLE_LOGS_OTELCOL=${{ vars.ENABLE_LOGS_OTELCOL }}
-            wget https://raw.githubusercontent.com/$REPO_NAME/$DEPLOY_ENV/docker-compose.yaml -O ~/docker-compose.yaml
-            docker compose pull
-            docker compose up -d --no-build
+            git clone -b staging --single-branch https://github.com/fhswf-study-projects/mlops-compose-stack.git
+            cd mlops-compose-stack
+            git pull
+            docker compose pull -q
+            docker compose build mlflow-server -q
+            docker compose up -d --wait --no-build
             echo "Cleaning up..."
-            rm ~/docker-compose.yaml
+            cd ~
+            rm -rf mlops-compose-stack
             echo "Deployment to VPS successful!"
