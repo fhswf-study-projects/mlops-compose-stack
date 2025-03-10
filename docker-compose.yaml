@@ -233,8 +233,8 @@ services:
     networks:
       - frontend
       - backend
-    env_file:
-      - ./services/pipeline-api/.env
+    # env_file:
+    #   - ./services/pipeline-api/.env
     depends_on:
       - postgres
       - rabbitmq
@@ -255,8 +255,8 @@ services:
           target: /usr/src/app
     networks:
       - frontend
-    env_file:
-      - ./services/streamlit-ui/.env
+    # env_file:
+    #   - ./services/streamlit-ui/.env
     depends_on:
       - otel-lgtm
       - pipeline-api
@@ -275,8 +275,8 @@ services:
           target: /usr/src/app
     networks:
       - backend
-    env_file:
-      - ./services/data-processor/.env
+    # env_file:
+    #   - ./services/data-processor/.env
     depends_on:
       wait-for-postgres:
         condition: service_completed_successfully
