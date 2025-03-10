@@ -86,6 +86,7 @@ jobs:
             export ENABLE_LOGS_OTELCOL=${{ vars.ENABLE_LOGS_OTELCOL }}
             git clone https://github.com/fhswf-study-projects/mlops-compose-stack.git
             cd mlops-compose-stack
+            git checkout staging
             docker compose pull
             docker compose build mlflow-server
             docker compose up -d --no-build
