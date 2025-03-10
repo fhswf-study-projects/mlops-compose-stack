@@ -83,6 +83,6 @@ jobs:
           script: |
             echo "Connected to VPS successfully!"
             wget https://raw.githubusercontent.com/$REPO_NAME/$DEPLOY_ENV/docker-compose.yaml -O ~/docker-compose.yaml
-            echo $MLFLOW_BUCKET_NAME
-            echo $PG_USER
+            docker-compose pull --include-deps
+            docker-compose up -d
             echo "Deployed to VPS successfully!"
