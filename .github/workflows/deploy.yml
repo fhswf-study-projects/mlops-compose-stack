@@ -33,6 +33,7 @@ jobs:
           timeout: 180s
           script: |
             echo "Connected to VPS successfully!"
+            sleep 10s
             echo "exporing variables and env variables"
             export DEPLOY_ENV=${{ env.DEPLOY_ENV }}
             export REPO_NAME=${{ env.REPO_NAME }}
