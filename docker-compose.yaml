@@ -22,7 +22,7 @@ services:
     networks:
       - backend
     environment:
-      DEFAULT_EMAIL=${LETSENCRYPT_DEFAULT_EMAIL}
+      - DEFAULT_EMAIL=${LETSENCRYPT_DEFAULT_EMAIL}
     volumes:
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
