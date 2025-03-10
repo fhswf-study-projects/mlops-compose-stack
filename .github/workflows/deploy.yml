@@ -84,6 +84,10 @@ jobs:
             export GF_PATHS_DATA=${{ vars.GF_PATHS_DATA }}
             export ENABLE_LOGS_OTELCOL=${{ vars.ENABLE_LOGS_OTELCOL }}
             wget https://raw.githubusercontent.com/$REPO_NAME/$DEPLOY_ENV/docker-compose.yaml -O ~/docker-compose.yaml
-            docker-compose pull --include-deps
-            docker-compose up -d
+            docker compose pull --include-deps
+            docker compose up -d
+            echo "Cleaning up..."
+            rm ~/docker-compose.yaml
+            echo "Deployment to VPS successful!"
+
             echo "Deployed to VPS successfully!"
