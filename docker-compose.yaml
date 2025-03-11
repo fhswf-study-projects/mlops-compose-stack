@@ -182,7 +182,6 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASSWORD}
       - OTEL_USER=${OTEL_USER}
       - OTEL_PASSWORD=${OTEL_PASSWORD}
-      # - ENABLE_LOGS_OTELCOL=true - use for debugging purposes
     volumes:
       - ./collector/collector-config.yaml:/otel-lgtm/otelcol-config.yaml
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -200,41 +199,32 @@ services:
       timeout: 10s
       retries: 3
 
-  # flower:
-  #   # restart: always
-  #   image: mher/flower
-  #   networks:
-  #     - frontend
-  #     - backend
-  #   environment:
-  #     - VIRTUAL_HOST=celery.localhost
-  #     - VIRTUAL_PORT=5555
-  #     - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
-  #     - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/
-  #     - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:15672/api/
-  #   depends_on:
-  #     wait-for-rabbitmq:
-  #       condition: service_completed_successfully
-
   # Services
   pipeline-api:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
-    build:
-      context: ./services/pipeline-api/
-      dockerfile: Dockerfile
-    develop:
-      watch:
-        - action: rebuild
-          path: ./services/pipeline-api/poetry.lock
-        - action: sync+restart
-          path: ./services/pipeline-api
-          target: /usr/src/app
     networks:
       - frontend
       - backend
-    # env_file:
-    #   - ./services/pipeline-api/.env
+    environment:
+      - VIRTUAL_HOST=${FASTAPI_VIRTUAL_HOST}
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=${FASTAPI_VIRTUAL_HOST}
+      - SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${SWAGGER_DOCS_BASIC_AUTH_PASSWORD}
+      - SWAGGER_DOCS_BASIC_AUTH_USERNAME=${SWAGGER_DOCS_BASIC_AUTH_USERNAME}
+      - S3_BUCKET_NAME=${DVC_BUCKET_NAME}
+      - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
+      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - CELERY_DEFAULT_QUEUE=${CELERY_DEFAULT_QUEUE}
+      - CELERY_BACKEND_CONNECTION=${CELERY_BACKEND_CONNECTION}
+      - CELERY_BROKER_CONNECTION=${CELERY_BROKER_CONNECTION}
+      - OTEL_SERVICE_NAME=${FASTAPI_OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_PYTHON_LOG_LEVEL=${OTEL_PYTHON_LOG_LEVEL}
+      - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
     depends_on:
       - postgres
       - rabbitmq
@@ -243,52 +233,51 @@ services:
   streamlit-ui:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
-    build:
-      context: ./services/streamlit-ui/
-      dockerfile: Dockerfile
-    develop:
-      watch:
-        - action: rebuild
-          path: ./services/streamlit-ui/poetry.lock
-        - action: sync+restart
-          path: ./services/streamlit-ui
-          target: /usr/src/app
     networks:
       - frontend
-    # env_file:
-    #   - ./services/streamlit-ui/.env
+    environment:
+      - VIRTUAL_HOST=${STREAMLIT_VIRTUAL_HOST}
+      - VIRTUAL_PORT=8501
+      - LETSENCRYPT_HOST=${STREAMLIT_VIRTUAL_HOST}
+      - API_BASE_URL=${API_BASE_URL}
+      - API_TOKEN=${API_TOKEN}
+      - OTEL_SERVICE_NAME=${STREAMLIT_OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_PYTHON_LOG_LEVEL=${OTEL_PYTHON_LOG_LEVEL}
+      - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
     depends_on:
       - otel-lgtm
       - pipeline-api
 
   data-processor:
+    restart: always
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
-    build:
-      context: ./services/data-processor/
-      dockerfile: Dockerfile
-    develop:
-      watch:
-        - action: rebuild
-          path: ./services/data-processor/poetry.lock
-        - action: sync+restart
-          path: ./services/data-processor
-          target: /usr/src/app
     networks:
       - backend
-    # env_file:
-    #   - ./services/data-processor/.env
+    environment:
+      - C_FORCE_ROOT=false
+      - MPLCONFIGDIR=/usr/src/app/artifacts
+      - S3_BUCKET_NAME=${CELERY_DATA_HOLDER_BUCKET_NAME}
+      - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
+      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - CELERY_DEFAULT_QUEUE=${CELERY_DEFAULT_QUEUE}
+      - CELERY_BACKEND_CONNECTION=${CELERY_BACKEND_CONNECTION}
+      - CELERY_BROKER_CONNECTION=${CELERY_BROKER_CONNECTION}
+      - MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+      - OTEL_SERVICE_NAME=${CELERY_OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_PYTHON_LOG_LEVEL=${OTEL_PYTHON_LOG_LEVEL}
+      - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
     depends_on:
       wait-for-postgres:
         condition: service_completed_successfully
       wait-for-rabbitmq:
         condition: service_completed_successfully
-
-# # Use it for container debugging
-# # Remove comments for starting with remote debugger
-# # ports:
-# #   - 5678:5678
-# # entrypoint:
-# #   ["sh","-c", "pip install debugpy -t /tmp && celery --quiet -A app.internals.celery.app worker --loglevel=FATAL"]
 
 volumes:
   certs:
