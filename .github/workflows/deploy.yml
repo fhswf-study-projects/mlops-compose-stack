@@ -94,7 +94,7 @@ jobs:
             cd mlops-compose-stack
             git pull
             docker compose pull -q
-            docker compose build -q mlflow-server
+            docker compose build -q --no-cache mlflow-server
             docker compose up -d --no-build
             echo "Cleaning up..."
             docker image prune -f
