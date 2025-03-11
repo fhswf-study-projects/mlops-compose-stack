@@ -109,8 +109,8 @@ services:
       - VIRTUAL_HOST=${S3_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${S3_VIRTUAL_HOST}
       - VIRTUAL_PORT=9001
-      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_ACCESS_KEY}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
     volumes:
       - minio_data:/data
     command: server /data --console-address ":9001"

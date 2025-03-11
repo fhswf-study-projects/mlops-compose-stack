@@ -35,6 +35,7 @@ jobs:
             echo "Connected to VPS successfully!"
             sleep 10s
             echo "Exporting environment variables and secrets"
+            export DEPLOY_ENV=${{ env.DEPLOY_ENV }}
             export LETSENCRYPT_DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_DEFAULT_EMAIL }}
             export OTEL_VERSION_TAG=${{ vars.OTEL_VERSION_TAG }}
             export MINIO_VERSION_TAG=${{ vars.MINIO_VERSION_TAG }}
@@ -93,9 +94,10 @@ jobs:
             cd mlops-compose-stack
             git pull
             docker compose pull -q
-            docker compose build mlflow-server -q
-            docker compose up -d --wait --no-build
+            docker compose build -q --no-cache mlflow-server
+            docker compose up -d --no-build
             echo "Cleaning up..."
+            docker image prune -f
             cd ~
             rm -rf mlops-compose-stack
             echo "Deployment to VPS successful!"
