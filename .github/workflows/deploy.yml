@@ -97,6 +97,7 @@ jobs:
             docker compose build -q mlflow-server
             docker compose up -d --no-build
             echo "Cleaning up..."
+            docker image prune -f
             cd ~
             rm -rf mlops-compose-stack
             echo "Deployment to VPS successful!"
