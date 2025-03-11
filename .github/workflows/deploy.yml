@@ -17,7 +17,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
-    environment: 'production'
+    environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
     permissions:
       contents: read
     steps:
@@ -34,9 +34,7 @@ jobs:
           script: |
             echo "Connected to VPS successfully!"
             sleep 10s
-            echo "exporing variables and env variables"
-            export DEPLOY_ENV=${{ env.DEPLOY_ENV }}
-            export REPO_NAME=${{ env.REPO_NAME }}
+            echo "Exporting environment variables and secrets"
             export LETSENCRYPT_DEFAULT_EMAIL=${{ secrets.LETSENCRYPT_DEFAULT_EMAIL }}
             export OTEL_VERSION_TAG=${{ vars.OTEL_VERSION_TAG }}
             export MINIO_VERSION_TAG=${{ vars.MINIO_VERSION_TAG }}
@@ -44,47 +42,54 @@ jobs:
             export RABBITMQ_VERSION_TAG=${{ vars.RABBITMQ_VERSION_TAG }}
             export NGINX_PROXY_VERSION_TAG=${{ vars.NGINX_PROXY_VERSION_TAG }}
             export ACME_COMPANION_VERSION_TAG=${{ vars.ACME_COMPANION_VERSION_TAG }}
-            export S3_VIRTUAL_HOST=${{ secrets.S3_VIRTUAL_HOST }}
-            export S3_VIRTUAL_PORT=${{ secrets.S3_VIRTUAL_PORT }}
-            export RABBITMQ_VIRTUAL_HOST=${{ secrets.RABBITMQ_VIRTUAL_HOST }}
-            export RABBITMQ_VIRTUAL_PORT=${{ secrets.RABBITMQ_VIRTUAL_PORT }}
-            export OTEL_VIRTUAL_HOST=${{ secrets.OTEL_VIRTUAL_HOST }}
-            export OTEL_VIRTUAL_PORT=${{ secrets.OTEL_VIRTUAL_PORT }}
-            export MLFLOW_VIRTUAL_HOST=${{ secrets.MLFLOW_VIRTUAL_HOST }}
-            export MLFLOW_VIRTUAL_PORT=${{ secrets.MLFLOW_VIRTUAL_PORT }}
-            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
-            export RABBITMQ_DEFAULT_PASSWORD=${{ secrets.RABBITMQ_DEFAULT_PASSWORD }}
-            export RABBITMQ_PORT=${{ secrets.RABBITMQ_PORT }}
-            export RABBITMQ_API_PORT=${{ secrets.RABBITMQ_API_PORT }}
-            export PG_USER=${{ secrets.PG_USER }}
-            export PG_PASSWORD=${{ secrets.PG_PASSWORD }}
-            export PG_DATABASE=${{ vars.PG_DATABASE }}
-            export PG_PORT=${{ secrets.PG_PORT }}
-            export PG_MLFLOW_USER=${{ secrets.PG_MLFLOW_USER }}
-            export PG_MLFLOW_PASSWORD=${{ secrets.PG_MLFLOW_PASSWORD }}
-            export PG_MLFLOW_DATABASE=${{ vars.PG_MLFLOW_DATABASE }}
-            export PG_CELERY_USER=${{ secrets.PG_CELERY_USER }}
-            export PG_CELERY_PASSWORD=${{ secrets.PG_CELERY_PASSWORD }}
-            export PG_CELERY_DATABASE=${{ vars.PG_CELERY_DATABASE }}
-            export OTEL_USER=${{ secrets.OTEL_USER }}
-            export OTEL_PASSWORD=${{ secrets.OTEL_PASSWORD }}
-            export MLFLOW_PORT=${{ secrets.MLFLOW_PORT }}
-            export MLFLOW_BUCKET_NAME=${{ vars.MLFLOW_BUCKET_NAME }}
-            export MLFLOW_S3_IGNORE_TLS=${{ vars.MLFLOW_S3_IGNORE_TLS }}
-            export DVC_BUCKET_NAME=${{ vars.DVC_BUCKET_NAME }}
-            export CELERY_DATA_HOLDER_BUCKET_NAME=${{ vars.CELERY_DATA_HOLDER_BUCKET_NAME }}
-            export MINIO_PORT=${{ secrets.MINIO_PORT }}
+            export S3_ENDPOINT_URL=${{ secrets.S3_ENDPOINT_URL }}
             export MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}
             export MINIO_SECRET_ACCESS_KEY=${{ secrets.MINIO_SECRET_KEY }}
             export MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
             export MINIO_ROOT_PASSWORD=${{ secrets.MINIO_ROOT_PASSWORD }}
-            export MINIO_CONSOLE_ADDRESS=${{ vars.MINIO_CONSOLE_ADDRESS }}
-            export GRAFANA_PORT=${{ secrets.GF_PORT }}
+            export RABBITMQ_DEFAULT_USER=${{ secrets.RABBITMQ_DEFAULT_USER }}
+            export RABBITMQ_DEFAULT_PASSWORD=${{ secrets.RABBITMQ_DEFAULT_PASSWORD }}
+            export OTEL_USER=${{ secrets.OTEL_USER }}
+            export OTEL_PASSWORD=${{ secrets.OTEL_PASSWORD }}
+            export MLFLOW_S3_IGNORE_TLS=${{ vars.MLFLOW_S3_IGNORE_TLS }}
+            export MLFLOW_BUCKET_NAME=${{ vars.MLFLOW_BUCKET_NAME }}
+            export MLFLOW_TRACKING_URI=${{ vars.MLFLOW_TRACKING_URI }}
+            export PG_MLFLOW_USER=${{ secrets.PG_MLFLOW_USER }}
+            export PG_MLFLOW_PASSWORD=${{ secrets.PG_MLFLOW_PASSWORD }}
+            export PG_MLFLOW_DATABASE=${{ vars.PG_MLFLOW_DATABASE }}
+            export PG_USER=${{ secrets.PG_USER }}
+            export PG_PASSWORD=${{ secrets.PG_PASSWORD }}
+            export PG_DATABASE=${{ vars.PG_DATABASE }}
+            export PG_CELERY_USER=${{ secrets.PG_CELERY_USER }}
+            export PG_CELERY_PASSWORD=${{ secrets.PG_CELERY_PASSWORD }}
+            export PG_CELERY_DATABASE=${{ vars.PG_CELERY_DATABASE }}
+            export DVC_BUCKET_NAME=${{ vars.DVC_BUCKET_NAME }}
+            export CELERY_DATA_HOLDER_BUCKET_NAME=${{ vars.CELERY_DATA_HOLDER_BUCKET_NAME }}
             export GF_USER=${{ secrets.GF_USER }}
             export GF_PASSWORD=${{ secrets.GF_PASSWORD }}
-            export GF_PATHS_DATA=${{ vars.GF_PATHS_DATA }}
-            export ENABLE_LOGS_OTELCOL=${{ vars.ENABLE_LOGS_OTELCOL }}
-            git clone -b staging --single-branch https://github.com/fhswf-study-projects/mlops-compose-stack.git
+            export CELERY_BACKEND_CONNECTION=${{ secrets.CELERY_BACKEND_CONNECTION }}
+            export CELERY_BROKER_CONNECTION=${{ secrets.CELERY_BROKER_CONNECTION }}
+            export CELERY_DEFAULT_QUEUE=${{ vars.CELERY_DEFAULT_QUEUE }}
+            export OTEL_VIRTUAL_HOST=${{ secrets.OTEL_VIRTUAL_HOST }}
+            export S3_VIRTUAL_HOST=${{ secrets.S3_VIRTUAL_HOST }}
+            export RABBITMQ_VIRTUAL_HOST=${{ secrets.RABBITMQ_VIRTUAL_HOST }}
+            export FASTAPI_VIRTUAL_HOST=${{ secrets.FASTAPI_VIRTUAL_HOST }}
+            export STREAMLIT_VIRTUAL_HOST=${{ secrets.STREAMLIT_VIRTUAL_HOST }}
+            export MLFLOW_VIRTUAL_HOST=${{ secrets.MLFLOW_VIRTUAL_HOST }}
+            export API_BASE_URL=${{ vars.API_BASE_URL }}
+            export API_TOKEN=${{ secrets.API_TOKEN }}
+            export SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_PASSWORD }}
+            export SWAGGER_DOCS_BASIC_AUTH_USERNAME=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_USERNAME }}
+            export FASTAPI_OTEL_SERVICE_NAME=${{ vars.FASTAPI_OTEL_SERVICE_NAME }}
+            export STREAMLIT_OTEL_SERVICE_NAME=${{ vars.STREAMLIT_OTEL_SERVICE_NAME }}
+            export CELERY_OTEL_SERVICE_NAME=${{ vars.CELERY_OTEL_SERVICE_NAME }}
+            export OTEL_EXPORTER_OTLP_ENDPOINT=${{ vars.OTEL_EXPORTER_OTLP_ENDPOINT }}
+            export OTEL_PYTHON_LOG_LEVEL=${{ vars.OTEL_PYTHON_LOG_LEVEL }}
+            export OTEL_PYTHON_LOG_CORRELATION=${{ vars.OTEL_PYTHON_LOG_CORRELATION }}
+            export OTEL_METRIC_EXPORT_INTERVAL=${{ vars.OTEL_METRIC_EXPORT_INTERVAL }}
+            export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${{ vars.OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED }}
+            echo "Getting containers up and running"
+            git clone -b ${{ env.DEPLOY_ENV }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
             docker compose pull -q
