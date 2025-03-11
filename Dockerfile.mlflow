@@ -11,13 +11,11 @@ RUN pip install --no-cache-dir \
 
 EXPOSE 5000
 
-ENTRYPOINT [
-    "mlflow",
-    "server",
-    "--backend-store-uri=$BACKEND_STORE_URI",
-    "--host=0.0.0.0",
-    "--serve-artifacts",
-    "--artifacts-destination=$ARTIFACTS_DESTINATION"
+ENTRYPOINT [ "mlflow", "server", \
+    "--backend-store-uri=$BACKEND_STORE_URI", \
+    "--host=0.0.0.0", \
+    "--serve-artifacts", \
+    "--artifacts-destination=$ARTIFACTS_DESTINATION" \
 ]
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
