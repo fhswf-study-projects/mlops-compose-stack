@@ -43,7 +43,7 @@ jobs:
             export RABBITMQ_VERSION_TAG=${{ vars.RABBITMQ_VERSION_TAG }}
             export NGINX_PROXY_VERSION_TAG=${{ vars.NGINX_PROXY_VERSION_TAG }}
             export ACME_COMPANION_VERSION_TAG=${{ vars.ACME_COMPANION_VERSION_TAG }}
-            export S3_ENDPOINT_URL=${{ secrets.S3_ENDPOINT_URL }}
+            export S3_ENDPOINT_URL=${{ vars.S3_ENDPOINT_URL }}
             export MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}
             export MINIO_SECRET_ACCESS_KEY=${{ secrets.MINIO_SECRET_KEY }}
             export MINIO_ROOT_USER=${{ secrets.MINIO_ROOT_USER }}
