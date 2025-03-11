@@ -207,6 +207,7 @@ services:
     environment:
       - VIRTUAL_HOST=celery.staging.mlops.iot64.de
       - VIRTUAL_PORT=5555
+      - LETSENCRYPT_HOST=celery.staging.mlops.iot64.de
       - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
       - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/
       - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:15672/api/
