@@ -146,6 +146,7 @@ services:
   # Services
   pipeline-api:
     restart: always
+    container_name: pipeline-api-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
     networks:
       - frontend
@@ -172,6 +173,7 @@ services:
 
   streamlit-ui:
     restart: always
+    container_name: streamlit-ui-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
     networks:
       - frontend
@@ -190,6 +192,7 @@ services:
 
   data-processor:
     restart: always
+    container_name: data-processor-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
     networks:
       - backend
