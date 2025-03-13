@@ -20,8 +20,8 @@ receivers:
     username: ${env:OTEL_USER}
     password: ${env:OTEL_PASSWORD}
     databases:
-      - mlflow_storage
-      - celery_storage
+      - ${env:PG_MLFLOW_DATABASE}
+      - ${env:PG_CELERY_DATABASE}
     connection_pool:
       max_idle_time: 10m
       max_lifetime: 0
