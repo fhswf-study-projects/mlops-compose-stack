@@ -9,3 +9,12 @@
 [submodule "Streamlit UI"]
 	path = services/streamlit-ui
 	url = https://github.com/fhswf-study-projects/mlops-streamlit-ui
+[submodule "services/streamlit-ui"]
+	path = services/streamlit-ui
+	url = https://github.com/fhswf-study-projects/mlops-streamlit-ui.git
+[submodule "services/pipeline-api"]
+	path = services/pipeline-api
+	url = https://github.com/fhswf-study-projects/mlops-pipeline-api.git
+[submodule "services/data-processor"]
+	path = services/data-processor
+	url = https://github.com/fhswf-study-projects/mlops-data-processor.git

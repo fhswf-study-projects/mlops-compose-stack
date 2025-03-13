@@ -1,0 +1,103 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  docker_stats:
+    endpoint: unix:///var/run/docker.sock
+    collection_interval: 2s
+    timeout: 20s
+  rabbitmq:
+    endpoint: http://rabbitmq:15672
+    username: ${env:RABBITMQ_USER}
+    password: ${env:RABBITMQ_PASSWORD}
+    collection_interval: 10s
+  postgresql:
+    endpoint: postgres:5432
+    transport: tcp
+    username: ${env:OTEL_USER}
+    password: ${env:OTEL_PASSWORD}
+    databases:
+      - mlflow_storage
+      - celery_storage
+    connection_pool:
+      max_idle_time: 10m
+      max_lifetime: 0
+      max_idle: 2
+      max_open: 5
+    collection_interval: 10s
+    tls:
+      insecure: true
+  prometheus/collector:
+    config:
+      scrape_configs:
+        - job_name: "opentelemetry-collector"
+          static_configs:
+            - targets: ["localhost:8888"]
+
+
+processors:
+
+  resource:
+    attributes:
+      - key: service.name
+        from_attribute: otel.service.name
+        action: upsert
+
+  batch:
+    # batch metrics before sending to reduce API usage
+    # send_batch_max_size: 200
+    # send_batch_size: 200
+    timeout: 5s
+
+  memory_limiter:
+    # drop metrics if memory usage gets too high
+    check_interval: 1s
+    limit_percentage: 65
+    spike_limit_percentage: 20
+
+  resourcedetection/docker:
+    detectors: [env, docker]
+    timeout: 2s
+    override: false
+
+exporters:
+  otlphttp/metrics:
+    endpoint: http://localhost:9090/api/v1/otlp
+    tls:
+      insecure: true
+  otlphttp/traces:
+    endpoint: http://localhost:4418
+    tls:
+      insecure: true
+  otlphttp/logs:
+    endpoint: http://localhost:3100/otlp
+    tls:
+      insecure: true
+  debug/metrics:
+    verbosity: detailed
+  debug/traces:
+    verbosity: detailed
+  debug/logs:
+    verbosity: detailed
+
+extensions:
+  health_check:
+
+service:
+  extensions: [health_check]
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch,resource]
+      exporters: [otlphttp/traces]
+    metrics:
+      receivers: [otlp,docker_stats,rabbitmq,postgresql,prometheus/collector]
+      processors: [batch,memory_limiter,resourcedetection/docker]
+      exporters: [otlphttp/metrics]
+    logs:
+      receivers: [otlp]
+      processors: [batch,resource]
+      exporters: [otlphttp/logs]
