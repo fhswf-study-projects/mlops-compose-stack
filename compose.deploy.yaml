@@ -75,21 +75,6 @@ services:
     networks:
       - backend
 
-  flower:
-    image: mher/flower
-    networks:
-      - frontend
-      - backend
-    environment:
-      - VIRTUAL_HOST=celery.mlops.iot64.de
-      - VIRTUAL_PORT=5555
-      - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/
-      - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:15672/api/
-    depends_on:
-      wait-for-rabbitmq:
-        condition: service_completed_successfully
-
   s3:
     restart: always
     image: minio/minio:${MINIO_VERSION_TAG}
