@@ -1,0 +1,221 @@
+# "ports" is used to expose container ports on the host. Neither "ports" nor "expose" is required for containers to access each other (as long as they are on the same network)
+
+services:
+  nginx-proxy:
+    restart: always
+    container_name: nginx-proxy
+    ports:
+      - "443:443"
+    volumes:
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+
+  acme-companion:
+    restart: always
+    image: nginxproxy/acme-companion:${ACME_COMPANION_VERSION_TAG}
+    container_name: nginx-proxy-acme
+    networks:
+      - backend
+    environment:
+      - DEFAULT_EMAIL=${LETSENCRYPT_DEFAULT_EMAIL}
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  rabbitmq:
+    restart: always
+    environment:
+      - VIRTUAL_HOST=${RABBITMQ_VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${RABBITMQ_VIRTUAL_HOST}
+      - VIRTUAL_PORT=15672
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  wait-for-rabbitmq:
+    image: atkrad/wait4x:${WAITER_VERSION_TAG}
+    depends_on:
+      - rabbitmq
+    command: rabbitmq "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/" -t 90s -i 2000ms
+    networks:
+      - backend
+  
+  postgres:
+    restart: always
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DATABASE}
+      - PG_MLFLOW_USER=${PG_MLFLOW_USER}
+      - PG_MLFLOW_PASSWORD=${PG_MLFLOW_PASSWORD}
+      - PG_MLFLOW_DB=${PG_MLFLOW_DATABASE}
+      - PG_CELERY_USER=${PG_CELERY_USER}
+      - PG_CELERY_PASSWORD=${PG_CELERY_PASSWORD}
+      - PG_CELERY_DB=${PG_CELERY_DATABASE}
+      - OTEL_USER=${OTEL_USER}
+      - OTEL_PASSWORD=${OTEL_PASSWORD}
+    healthcheck:
+      test: ["CMD", "pg_isready", "-p", "5432", "-U", "${PG_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+
+  wait-for-postgres:
+    image: atkrad/wait4x:${WAITER_VERSION_TAG}
+    depends_on:
+      - postgres
+    command: postgresql "postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}?sslmode=disable" -t 90s -i 2000ms
+    networks:
+      - backend
+
+  s3:
+    restart: always
+    image: minio/minio:${MINIO_VERSION_TAG}
+    networks:
+      - frontend
+      - backend
+    environment:
+      - VIRTUAL_HOST=${S3_VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${S3_VIRTUAL_HOST}
+      - VIRTUAL_PORT=9001
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  createbuckets:
+    image: minio/mc:${MINIO_MC_VERSION_TAG}
+    entrypoint: >
+      /bin/sh -c "
+      sleep 15;
+      /usr/bin/mc config host add myminio http://s3:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME} --ignore-existing;
+      /usr/bin/mc mb myminio/${DVC_BUCKET_NAME} --ignore-existing --with-versioning;
+      /usr/bin/mc mb myminio/${CELERY_DATA_HOLDER_BUCKET_NAME} --ignore-existing --with-versioning;
+      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_ACCESS_KEY}" myminio ${MINIO_ROOT_USER};
+      exit 0;
+      "
+  
+  mlflow-server:
+    restart: always
+    image: ghcr.io/fhswf-study-projects/mlflow-server:${DEPLOY_ENV}
+    environment:
+      - VIRTUAL_HOST=${MLFLOW_VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${MLFLOW_VIRTUAL_HOST}
+      - VIRTUAL_PORT=5000
+      - AWS_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - AWS_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - MLFLOW_S3_ENDPOINT_URL=http://s3:9000
+      - MLFLOW_S3_IGNORE_TLS=${MLFLOW_S3_IGNORE_TLS}
+      - BACKEND_STORE_URI=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
+      - ARTIFACTS_DESTINATION=s3://${MLFLOW_BUCKET_NAME}
+
+  otel-lgtm:
+    image: grafana/otel-lgtm:${OTEL_VERSION_TAG}
+    environment:
+      - VIRTUAL_HOST=${OTEL_VIRTUAL_HOST}
+      - LETSENCRYPT_HOST=${OTEL_VIRTUAL_HOST}
+      - VIRTUAL_PORT=3000
+      - GF_SECURITY_ADMIN_USER=${GF_USER}
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_AUTH_ANONYMOUS_HIDE_VERSION=true 
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_PASSWORD}
+      - GF_PATHS_DATA=/data/grafana
+      - RABBITMQ_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASSWORD}
+      - OTEL_USER=${OTEL_USER}
+      - OTEL_PASSWORD=${OTEL_PASSWORD}
+      - PG_CELERY_DATABASE=${PG_CELERY_DATABASE}
+      - PG_MLFLOW_DATABASE=${PG_MLFLOW_DATABASE}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Services
+  pipeline-api:
+    restart: always
+    container_name: pipeline-api-${DEPLOY_ENV}
+    image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
+    networks:
+      - frontend
+      - backend
+    environment:
+      - VIRTUAL_HOST=${FASTAPI_VIRTUAL_HOST}
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=${FASTAPI_VIRTUAL_HOST}
+      - SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${SWAGGER_DOCS_BASIC_AUTH_PASSWORD}
+      - SWAGGER_DOCS_BASIC_AUTH_USERNAME=${SWAGGER_DOCS_BASIC_AUTH_USERNAME}
+      - S3_BUCKET_NAME=${DVC_BUCKET_NAME}
+      - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
+      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - CELERY_DEFAULT_QUEUE=${CELERY_DEFAULT_QUEUE}
+      - CELERY_BACKEND_CONNECTION=${CELERY_BACKEND_CONNECTION}
+      - CELERY_BROKER_CONNECTION=${CELERY_BROKER_CONNECTION}
+      - OTEL_SERVICE_NAME=${FASTAPI_OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_PYTHON_LOG_LEVEL=${OTEL_PYTHON_LOG_LEVEL}
+      - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
+
+  streamlit-ui:
+    restart: always
+    container_name: streamlit-ui-${DEPLOY_ENV}
+    image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
+    networks:
+      - frontend
+    environment:
+      - VIRTUAL_HOST=${STREAMLIT_VIRTUAL_HOST}
+      - VIRTUAL_PORT=8501
+      - LETSENCRYPT_HOST=${STREAMLIT_VIRTUAL_HOST}
+      - API_BASE_URL=${API_BASE_URL}
+      - API_TOKEN=${API_TOKEN}
+      - OTEL_SERVICE_NAME=${STREAMLIT_OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_PYTHON_LOG_LEVEL=${OTEL_PYTHON_LOG_LEVEL}
+      - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
+
+  data-processor:
+    restart: always
+    container_name: data-processor-${DEPLOY_ENV}
+    image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
+    networks:
+      - backend
+    environment:
+      - C_FORCE_ROOT=false
+      - MPLCONFIGDIR=/usr/src/app/artifacts
+      - S3_BUCKET_NAME=${CELERY_DATA_HOLDER_BUCKET_NAME}
+      - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
+      - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
+      - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - CELERY_DEFAULT_QUEUE=${CELERY_DEFAULT_QUEUE}
+      - CELERY_BACKEND_CONNECTION=${CELERY_BACKEND_CONNECTION}
+      - CELERY_BROKER_CONNECTION=${CELERY_BROKER_CONNECTION}
+      - MLFLOW_TRACKING_URI=${MLFLOW_TRACKING_URI}
+      - OTEL_SERVICE_NAME=${CELERY_OTEL_SERVICE_NAME}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_EXPORTER_OTLP_ENDPOINT}
+      - OTEL_PYTHON_LOG_LEVEL=${OTEL_PYTHON_LOG_LEVEL}
+      - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
+      - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
+
+volumes:
+  certs:
+  html:
+  acme:

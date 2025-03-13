@@ -1,0 +1,68 @@
+services:
+  mlflow-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+
+  flower:
+    image: mher/flower
+    networks:
+      - frontend
+      - backend
+    environment:
+      - VIRTUAL_HOST=celery.localhost
+      - VIRTUAL_PORT=5555
+      - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
+      - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/
+      - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:15672/api/
+    depends_on:
+      wait-for-rabbitmq:
+        condition: service_completed_successfully
+
+  # Services
+  pipeline-api:
+    build:
+      context: ./services/pipeline-api/
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: ./services/pipeline-api/poetry.lock
+        - action: sync+restart
+          path: ./services/pipeline-api
+          target: /usr/src/app
+    env_file:
+      - ./services/pipeline-api/.env
+
+  streamlit-ui:
+    build:
+      context: ./services/streamlit-ui/
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: ./services/streamlit-ui/poetry.lock
+        - action: sync+restart
+          path: ./services/streamlit-ui
+          target: /usr/src/app
+    env_file:
+      - ./services/streamlit-ui/.env
+
+  data-processor:
+    build:
+      context: ./services/data-processor/
+      dockerfile: Dockerfile
+    develop:
+      watch:
+        - action: rebuild
+          path: ./services/data-processor/poetry.lock
+        - action: sync+restart
+          path: ./services/data-processor
+          target: /usr/src/app
+    env_file:
+      - ./services/data-processor/.env
+
+# # Use it for container debugging
+# # Remove comments for starting with remote debugger
+# # entrypoint:
+# #   ["sh","-c", "pip install debugpy -t /tmp && celery --quiet -A app.internals.celery.app worker --loglevel=FATAL"]
