@@ -1,9 +1,7 @@
 name: Deploy to VPS
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ "staging", "main" ]
+  workflow_call:
 
 env:
   # Use for multi-branch deployment
@@ -14,16 +12,8 @@ env:
   REPO_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push:
-    runs-on: self-hosted
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Build and Publish Mlflow image
-        uses: ./.github/workflows/mlflow-publish.yml
   deploy:
     runs-on: self-hosted
-    needs: [build-and-push]
     environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
     permissions:
       contents: read
