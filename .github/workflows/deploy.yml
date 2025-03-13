@@ -17,6 +17,8 @@ jobs:
   build-and-push:
     runs-on: self-hosted
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Build and Publish Mlflow image
         uses: ./.github/workflows/mlflow-publish.yml
   deploy:
