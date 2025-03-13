@@ -98,6 +98,7 @@ services:
     image: minio/mc:${MINIO_MC_VERSION_TAG}
     entrypoint: >
       /bin/sh -c "
+      sleep 15;
       /usr/bin/mc config host add myminio http://s3:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
       /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME} --ignore-existing;
       /usr/bin/mc mb myminio/${DVC_BUCKET_NAME} --ignore-existing --with-versioning;
