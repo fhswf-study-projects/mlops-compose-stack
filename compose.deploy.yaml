@@ -1,19 +1,14 @@
+# "ports" is used to expose container ports on the host. Neither "ports" nor "expose" is required for containers to access each other (as long as they are on the same network)
+
 services:
   nginx-proxy:
     restart: always
-    image: nginxproxy/nginx-proxy:${NGINX_PROXY_VERSION_TAG}
     container_name: nginx-proxy
     ports:
-      - "80:80" # HTTP
-      - "443:443" # HTTPS
-    networks:
-      - frontend
-      - backend
+      - "443:443"
     volumes:
-      - ./configs/nginx/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
 
   acme-companion:
     restart: always
@@ -32,23 +27,12 @@ services:
 
   rabbitmq:
     restart: always
-    image: rabbitmq:${RABBITMQ_VERSION_TAG}
-    ports:
-      - "5672:5672"
-    networks:
-      - backend
     environment:
       - VIRTUAL_HOST=${RABBITMQ_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${RABBITMQ_VIRTUAL_HOST}
       - VIRTUAL_PORT=15672
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASSWORD}
-    volumes:
-      - ./configs/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
-      - ./configs/rabbitmq/30-management_agent.enable_metrics_collector.conf:/etc/rabbitmq/conf.d/management_agent.disable_metrics_collector.conf
-      - ./configs/rabbitmq/40-consumer_timeout.conf:/etc/rabbitmq/conf.d/40-consumer_timeout.conf
-      - rabbitmq_lib:/var/lib/rabbitmq/
-      - rabbitmq_log:/var/log/rabbitmq/
     healthcheck:
       test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
       interval: 30s
@@ -56,7 +40,7 @@ services:
       retries: 3
 
   wait-for-rabbitmq:
-    image: atkrad/wait4x
+    image: atkrad/wait4x:${WAITER_VERSION_TAG}
     depends_on:
       - rabbitmq
     command: rabbitmq "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/" -t 90s -i 2000ms
@@ -65,11 +49,6 @@ services:
   
   postgres:
     restart: always
-    image: postgres:${POSTGRES_VERSION_TAG}
-    ports:
-      - "5432:5432"
-    networks:
-      - backend
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
@@ -82,9 +61,6 @@ services:
       - PG_CELERY_DB=${PG_CELERY_DATABASE}
       - OTEL_USER=${OTEL_USER}
       - OTEL_PASSWORD=${OTEL_PASSWORD}
-    volumes:
-      - ./configs/postgres/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
-      - postgres_data:/var/lib/postgresql/data/
     healthcheck:
       test: ["CMD", "pg_isready", "-p", "5432", "-U", "${PG_USER}"]
       interval: 5s
@@ -92,7 +68,7 @@ services:
       retries: 3
 
   wait-for-postgres:
-    image: atkrad/wait4x
+    image: atkrad/wait4x:${WAITER_VERSION_TAG}
     depends_on:
       - postgres
     command: postgresql "postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}?sslmode=disable" -t 90s -i 2000ms
@@ -111,8 +87,6 @@ services:
       - VIRTUAL_PORT=9001
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-    volumes:
-      - minio_data:/data
     command: server /data --console-address ":9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
@@ -121,11 +95,7 @@ services:
       retries: 3
 
   createbuckets:
-    image: minio/mc
-    networks:
-      - backend
-    depends_on:
-      - s3
+    image: minio/mc:${MINIO_MC_VERSION_TAG}
     entrypoint: >
       /bin/sh -c "
       /usr/bin/mc config host add myminio http://s3:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
@@ -138,14 +108,7 @@ services:
   
   mlflow-server:
     restart: always
-    build:
-      context: .
-      dockerfile: Dockerfile.mlflow
-    ports:
-      - "5000:5000"
-    networks:
-      - frontend
-      - backend
+    image: ghcr.io/fhswf-study-projects/mlflow-server:${DEPLOY_ENV}
     environment:
       - VIRTUAL_HOST=${MLFLOW_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${MLFLOW_VIRTUAL_HOST}
@@ -156,19 +119,9 @@ services:
       - MLFLOW_S3_IGNORE_TLS=${MLFLOW_S3_IGNORE_TLS}
       - BACKEND_STORE_URI=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
       - ARTIFACTS_DESTINATION=s3://${MLFLOW_BUCKET_NAME}
-    depends_on:
-      wait-for-postgres:
-        condition: service_completed_successfully
 
   otel-lgtm:
     image: grafana/otel-lgtm:${OTEL_VERSION_TAG}
-    ports:
-      - "3000:3000"
-      - "4317:4317"
-      - "4318:4318"
-    networks:
-      - frontend
-      - backend
     environment:
       - VIRTUAL_HOST=${OTEL_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${OTEL_VIRTUAL_HOST}
@@ -182,42 +135,18 @@ services:
       - RABBITMQ_PASSWORD=${RABBITMQ_DEFAULT_PASSWORD}
       - OTEL_USER=${OTEL_USER}
       - OTEL_PASSWORD=${OTEL_PASSWORD}
-    volumes:
-      - ./collector/collector-config.yaml:/otel-lgtm/otelcol-config.yaml
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - loki_data:/data/loki
-      - grafana_data:/data/grafana
-      - prometheus_data:/data/prometheus
-    depends_on:
-      wait-for-postgres:
-        condition: service_completed_successfully
-      wait-for-rabbitmq:
-        condition: service_completed_successfully
+      - PG_CELERY_DATABASE=${PG_CELERY_DATABASE}
+      - PG_MLFLOW_DATABASE=${PG_MLFLOW_DATABASE}
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
 
-  flower:
-    image: mher/flower
-    networks:
-      - frontend
-      - backend
-    environment:
-      - VIRTUAL_HOST=celery.staging.mlops.iot64.de
-      - VIRTUAL_PORT=5555
-      - LETSENCRYPT_HOST=celery.staging.mlops.iot64.de
-      - CELERY_RESULT_BACKEND=postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}
-      - CELERY_BROKER_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/
-      - FLOWER_BROKER_API=http://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:15672/api/
-    depends_on:
-      wait-for-rabbitmq:
-        condition: service_completed_successfully
-
   # Services
   pipeline-api:
     restart: always
+    container_name: pipeline-api-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
     networks:
       - frontend
@@ -241,13 +170,10 @@ services:
       - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
       - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
       - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
-    depends_on:
-      - postgres
-      - rabbitmq
-      - s3
 
   streamlit-ui:
     restart: always
+    container_name: streamlit-ui-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
     networks:
       - frontend
@@ -263,12 +189,10 @@ services:
       - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
       - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
       - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
-    depends_on:
-      - otel-lgtm
-      - pipeline-api
 
   data-processor:
     restart: always
+    container_name: data-processor-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
     networks:
       - backend
@@ -289,26 +213,8 @@ services:
       - OTEL_PYTHON_LOG_CORRELATION=${OTEL_PYTHON_LOG_CORRELATION}
       - OTEL_METRIC_EXPORT_INTERVAL=${OTEL_METRIC_EXPORT_INTERVAL}
       - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED}
-    depends_on:
-      wait-for-postgres:
-        condition: service_completed_successfully
-      wait-for-rabbitmq:
-        condition: service_completed_successfully
 
 volumes:
   certs:
   html:
   acme:
-  rabbitmq_lib:
-  rabbitmq_log:
-  postgres_data:
-  minio_data:
-  loki_data:
-  grafana_data:
-  prometheus_data:
-
-networks:
-  frontend:
-    driver: bridge
-  backend:
-    driver: bridge

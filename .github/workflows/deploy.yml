@@ -14,9 +14,11 @@ env:
   REPO_NAME: ${{ github.repository }}
 
 jobs:
-
+  build-and-push:
+    uses: ./.github/workflows/mlflow-publish.yml
   deploy:
     runs-on: self-hosted
+    needs: [build-and-push]
     environment: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
     permissions:
       contents: read
@@ -93,9 +95,8 @@ jobs:
             git clone -b ${{ env.DEPLOY_ENV }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
-            docker compose pull -q
-            docker compose build -q --no-cache mlflow-server
-            docker compose up -d --no-build
+            docker compose -f compose.yaml -f compose.deploy.yaml pull -q
+            docker compose -f compose.yaml -f compose.deploy.yaml up -d --no-build
             echo "Cleaning up..."
             docker image prune -f
             cd ~
