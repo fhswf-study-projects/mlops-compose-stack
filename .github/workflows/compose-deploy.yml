@@ -39,6 +39,8 @@ jobs:
             export POSTGRES_VERSION_TAG=${{ vars.POSTGRES_VERSION_TAG }}
             export RABBITMQ_VERSION_TAG=${{ vars.RABBITMQ_VERSION_TAG }}
             export NGINX_PROXY_VERSION_TAG=${{ vars.NGINX_PROXY_VERSION_TAG }}
+            export WAITER_VERSION_TAG=${{ vars.WAITER_VERSION_TAG }}
+            export MINIO_MC_VERSION_TAG=${{ vars.MINIO_MC_VERSION_TAG }}
             export ACME_COMPANION_VERSION_TAG=${{ vars.ACME_COMPANION_VERSION_TAG }}
             export S3_ENDPOINT_URL=${{ vars.S3_ENDPOINT_URL }}
             export MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}
