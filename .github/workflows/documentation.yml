@@ -23,6 +23,7 @@ jobs:
           git clone git@github.com:fhswf-study-projects/mlops-pipeline-api.git repos/mlops-pipeline-api
           git clone git@github.com:fhswf-study-projects/mlops-streamlit-ui.git repos/mlops-streamlit-ui
           git clone git@github.com:fhswf-study-projects/mlops-compose-stack.git repos/mlops-compose-stack
+          
 
       - name: Set Up Python
         uses: actions/setup-python@v4
