@@ -1,0 +1,53 @@
+name: Docs2Pages
+
+on:
+  workflow_call:
+
+jobs:
+  build-docs:
+    runs-on: self-hosted
+    permissions:
+      contents: write
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Clone Other Repositories
+        run: |
+          git clone git@github.com:fhswf-study-projects/mlops-data-processor.git repos/mlops-data-processor
+          git clone git@github.com:fhswf-study-projects/mlops-pipeline-api.git repos/mlops-pipeline-api
+          git clone git@github.com:fhswf-study-projects/mlops-streamlit-ui.git repos/mlops-streamlit-ui
+          git clone git@github.com:fhswf-study-projects/mlops-compose-stack.git repos/mlops-compose-stack
+
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+
+      - name: Install Dependencies & Build Docs
+        run: |
+          pip install sphinx
+          pip install sphinx-copybutton
+          mkdir docs
+          cp -rf repos/mlops-compose-stack/docs docs
+          cd docs
+          sphinx-apidoc -o streamlit-ui -H Streamlit-UI ../repos/mlops-streamlit-ui/app
+          sphinx-apidoc -o data-processor -H Data-Processor ../repos/mlops-data-processor/app
+          sphinx-apidoc -o pipeline-api -H Pipeline-API ../repos/mlops-pipeline-api/app
+          sphinx-build -b html . _build/html
+          mkdir -p gh-pages
+          touch gh-pages/.nojekyll
+          cp -r _build/html/* gh-pages/
+
+      - name: Deploy to GitHub Pages
+        if: ${{ github.event_name == 'push' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          branch: gh-pages
+          folder: gh-pages
