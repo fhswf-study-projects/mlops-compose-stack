@@ -40,6 +40,7 @@ jobs:
           pip install sphinx-rtd-theme
           pip install sphinx-copybutton
           cd docs
+          rm -rf _build
           sphinx-apidoc -o streamlit-ui -H Streamlit-UI ../repos/mlops-streamlit-ui/app
           sphinx-apidoc -o data-processor -H Data-Processor ../repos/mlops-data-processor/app
           sphinx-apidoc -o pipeline-api -H Pipeline-API ../repos/mlops-pipeline-api/app
