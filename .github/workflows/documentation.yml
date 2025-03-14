@@ -37,6 +37,7 @@ jobs:
       - name: Install Dependencies & Build Docs
         run: |
           pip install sphinx
+          pip install sphinx-rtd-theme
           pip install sphinx-copybutton
           cd docs
           sphinx-apidoc -o streamlit-ui -H Streamlit-UI ../repos/mlops-streamlit-ui/app
