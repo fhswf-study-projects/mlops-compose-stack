@@ -19,6 +19,7 @@ jobs:
 
       - name: Clone Other Repositories
         run: |
+          rm -rf repos
           git clone https://github.com/fhswf-study-projects/mlops-data-processor repos/mlops-data-processor
           git clone https://github.com/fhswf-study-projects/mlops-pipeline-api repos/mlops-pipeline-api
           git clone https://github.com/fhswf-study-projects/mlops-streamlit-ui repos/mlops-streamlit-ui
@@ -38,6 +39,7 @@ jobs:
         run: |
           pip install sphinx
           pip install sphinx-copybutton
+          rm -rf docs
           mkdir docs
           cp -rf repos/mlops-compose-stack/docs docs
           cd docs
