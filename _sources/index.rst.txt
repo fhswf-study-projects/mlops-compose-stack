@@ -9,6 +9,11 @@ MLOPS documentation
 .. toctree::
    :caption: Contents:
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Description
+
+   introduction
 
 .. toctree::
    :maxdepth: 2
