@@ -6,7 +6,7 @@ on:
 jobs:
   build-docs:
     runs-on: self-hosted
-    permissions:
+    permissions: 
       contents: write
       packages: write
       id-token: write
