@@ -44,9 +44,9 @@ jobs:
           sphinx-apidoc -o data-processor -H Data-Processor ../repos/mlops-data-processor/app
           sphinx-apidoc -o pipeline-api -H Pipeline-API ../repos/mlops-pipeline-api/app
           sphinx-build -b html . _build/html
+          cd .. 
           mkdir -p gh-pages
           touch gh-pages/.nojekyll
-          cd .. 
           cp -r docs/_build/html/* gh-pages/
 
       - name: Deploy to GitHub Pages
