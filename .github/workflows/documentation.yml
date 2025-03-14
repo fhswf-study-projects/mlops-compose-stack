@@ -19,10 +19,10 @@ jobs:
 
       - name: Clone Other Repositories
         run: |
-          git clone git@github.com:fhswf-study-projects/mlops-data-processor.git repos/mlops-data-processor
-          git clone git@github.com:fhswf-study-projects/mlops-pipeline-api.git repos/mlops-pipeline-api
-          git clone git@github.com:fhswf-study-projects/mlops-streamlit-ui.git repos/mlops-streamlit-ui
-          git clone git@github.com:fhswf-study-projects/mlops-compose-stack.git repos/mlops-compose-stack
+          git clone https://github.com/fhswf-study-projects/mlops-data-processor repos/mlops-data-processor
+          git clone https://github.com/fhswf-study-projects/mlops-pipeline-api repos/mlops-pipeline-api
+          git clone https://github.com/fhswf-study-projects/mlops-streamlit-ui repos/mlops-streamlit-ui
+          git clone https://github.com/fhswf-study-projects/mlops-compose-stack repos/mlops-compose-stack
           
 
       - name: Set Up Python
