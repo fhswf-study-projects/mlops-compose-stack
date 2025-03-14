@@ -23,6 +23,10 @@ jobs:
           git clone https://github.com/fhswf-study-projects/mlops-pipeline-api repos/mlops-pipeline-api
           git clone https://github.com/fhswf-study-projects/mlops-streamlit-ui repos/mlops-streamlit-ui
           git clone https://github.com/fhswf-study-projects/mlops-compose-stack repos/mlops-compose-stack
+          cd repos/mlops-compose-stack
+          git checkout documentation
+          cd ..
+          cd ..
           
 
       - name: Set Up Python
