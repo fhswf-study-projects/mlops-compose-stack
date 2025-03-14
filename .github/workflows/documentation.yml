@@ -19,7 +19,7 @@ jobs:
 
       - name: Checkout the docs branch
         run: |
-          git fetch origin docs  # Fetches the docs branch
+          git fetch origin documentation  # Fetches the docs branch
           git checkout documentation  # Switches to the docs branch
 
       - name: Clone Other Repositories
