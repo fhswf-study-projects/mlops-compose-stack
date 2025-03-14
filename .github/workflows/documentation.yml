@@ -6,7 +6,7 @@ on:
 jobs:
   build-docs:
     runs-on: self-hosted
-    permissions: 
+    permissions:
       contents: write
       packages: write
       id-token: write
@@ -46,7 +46,8 @@ jobs:
           sphinx-build -b html . _build/html
           mkdir -p gh-pages
           touch gh-pages/.nojekyll
-          cp -r _build/html/* gh-pages/
+          cd .. 
+          cp -r docs/_build/html/* gh-pages/
 
       - name: Deploy to GitHub Pages
         if: ${{ github.event_name == 'push' }}
