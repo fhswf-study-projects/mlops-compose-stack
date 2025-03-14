@@ -1,7 +1,7 @@
 name: Docs2Pages
 
 on:
-  workflow_call:
+  push:
 
 jobs:
   build-docs:
