@@ -1,0 +1,54 @@
+app package
+===========
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   app.core
+   app.routers
+
+Submodules
+----------
+
+app.constants module
+--------------------
+
+.. automodule:: app.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.middleware module
+---------------------
+
+.. automodule:: app.middleware
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.schemas module
+------------------
+
+.. automodule:: app.schemas
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.utils module
+----------------
+
+.. automodule:: app.utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app
+   :members:
+   :show-inheritance:
+   :undoc-members:

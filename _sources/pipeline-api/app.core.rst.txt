@@ -1,0 +1,37 @@
+app.core package
+================
+
+Submodules
+----------
+
+app.core.celery\_client module
+------------------------------
+
+.. automodule:: app.core.celery_client
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.core.data\_factory module
+-----------------------------
+
+.. automodule:: app.core.data_factory
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.core.dvc\_client module
+---------------------------
+
+.. automodule:: app.core.dvc_client
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.core
+   :members:
+   :show-inheritance:
+   :undoc-members:

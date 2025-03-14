@@ -1,0 +1,21 @@
+app.tasks.data\_processing package
+==================================
+
+Submodules
+----------
+
+app.tasks.data\_processing.tasks module
+---------------------------------------
+
+.. automodule:: app.tasks.data_processing.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.tasks.data_processing
+   :members:
+   :show-inheritance:
+   :undoc-members:

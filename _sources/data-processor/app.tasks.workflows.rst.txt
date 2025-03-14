@@ -1,0 +1,21 @@
+app.tasks.workflows package
+===========================
+
+Submodules
+----------
+
+app.tasks.workflows.tasks module
+--------------------------------
+
+.. automodule:: app.tasks.workflows.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.tasks.workflows
+   :members:
+   :show-inheritance:
+   :undoc-members:

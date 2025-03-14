@@ -1,0 +1,38 @@
+app package
+===========
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   app.core
+   app.tasks
+
+Submodules
+----------
+
+app.constants module
+--------------------
+
+.. automodule:: app.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.utils module
+----------------
+
+.. automodule:: app.utils
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app
+   :members:
+   :show-inheritance:
+   :undoc-members:

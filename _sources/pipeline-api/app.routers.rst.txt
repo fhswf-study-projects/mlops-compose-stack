@@ -1,0 +1,29 @@
+app.routers package
+===================
+
+Submodules
+----------
+
+app.routers.api module
+----------------------
+
+.. automodule:: app.routers.api
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.routers.health module
+-------------------------
+
+.. automodule:: app.routers.health
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.routers
+   :members:
+   :show-inheritance:
+   :undoc-members:

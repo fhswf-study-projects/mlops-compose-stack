@@ -1,0 +1,21 @@
+app.tasks package
+=================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   app.tasks.data_processing
+   app.tasks.data_transformation
+   app.tasks.modeling
+   app.tasks.workflows
+
+Module contents
+---------------
+
+.. automodule:: app.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:

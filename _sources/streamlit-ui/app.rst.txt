@@ -1,0 +1,53 @@
+app package
+===========
+
+Submodules
+----------
+
+app.backend module
+------------------
+
+.. automodule:: app.backend
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.constants module
+--------------------
+
+.. automodule:: app.constants
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.reloader module
+-------------------
+
+.. automodule:: app.reloader
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.schemas module
+------------------
+
+.. automodule:: app.schemas
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.ui module
+-------------
+
+.. automodule:: app.ui
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app
+   :members:
+   :show-inheritance:
+   :undoc-members:

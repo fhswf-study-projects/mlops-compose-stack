@@ -1,0 +1,21 @@
+app.tasks.data\_transformation package
+======================================
+
+Submodules
+----------
+
+app.tasks.data\_transformation.tasks module
+-------------------------------------------
+
+.. automodule:: app.tasks.data_transformation.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.tasks.data_transformation
+   :members:
+   :show-inheritance:
+   :undoc-members:

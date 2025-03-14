@@ -1,0 +1,21 @@
+app.tasks.modeling package
+==========================
+
+Submodules
+----------
+
+app.tasks.modeling.tasks module
+-------------------------------
+
+.. automodule:: app.tasks.modeling.tasks
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.tasks.modeling
+   :members:
+   :show-inheritance:
+   :undoc-members:

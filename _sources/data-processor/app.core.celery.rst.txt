@@ -1,0 +1,29 @@
+app.core.celery package
+=======================
+
+Submodules
+----------
+
+app.core.celery.app module
+--------------------------
+
+.. automodule:: app.core.celery.app
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+app.core.celery.celeryconfig module
+-----------------------------------
+
+.. automodule:: app.core.celery.celeryconfig
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.core.celery
+   :members:
+   :show-inheritance:
+   :undoc-members:

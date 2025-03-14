@@ -1,0 +1,29 @@
+app.core package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   app.core.celery
+
+Submodules
+----------
+
+app.core.dvc\_client module
+---------------------------
+
+.. automodule:: app.core.dvc_client
+   :members:
+   :show-inheritance:
+   :undoc-members:
+
+Module contents
+---------------
+
+.. automodule:: app.core
+   :members:
+   :show-inheritance:
+   :undoc-members:
