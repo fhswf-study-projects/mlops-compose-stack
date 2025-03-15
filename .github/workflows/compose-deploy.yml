@@ -92,7 +92,7 @@ jobs:
             cd mlops-compose-stack
             git pull
             echo "Creating external network(s)"
-            ddocker network ls --format '{{.Name}}' \
+            docker network ls --format '{{.Name}}' \
               | grep -wq "backend" \
               || docker network create backend
             echo "Getting infrastucture up and running"
