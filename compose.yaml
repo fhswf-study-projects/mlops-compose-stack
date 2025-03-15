@@ -166,5 +166,5 @@ volumes:
   prometheus_data:
 
 networks:
-  backend:
-    external: true
+  external: 
+    name: backend
