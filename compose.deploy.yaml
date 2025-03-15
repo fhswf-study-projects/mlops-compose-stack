@@ -1,9 +1,10 @@
-# "ports" is used to expose container ports on the host. Neither "ports" nor "expose" is required for containers to access each other (as long as they are on the same network)
-
 services:
   nginx-proxy:
     restart: always
     container_name: nginx-proxy
+    profiles: [ "techstack" ]
+    networks:
+      - frontend
     ports:
       - "443:443"
     volumes:
@@ -14,6 +15,7 @@ services:
     restart: always
     image: nginxproxy/acme-companion:${ACME_COMPANION_VERSION_TAG}
     container_name: nginx-proxy-acme
+    profiles: [ "techstack" ]
     networks:
       - backend
     environment:
@@ -27,6 +29,7 @@ services:
 
   rabbitmq:
     restart: always
+    profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${RABBITMQ_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${RABBITMQ_VIRTUAL_HOST}
@@ -39,16 +42,9 @@ services:
       timeout: 30s
       retries: 3
 
-  wait-for-rabbitmq:
-    image: atkrad/wait4x:${WAITER_VERSION_TAG}
-    depends_on:
-      - rabbitmq
-    command: rabbitmq "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/" -t 90s -i 2000ms
-    networks:
-      - backend
-  
   postgres:
     restart: always
+    profiles: [ "techstack" ]
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
@@ -67,20 +63,10 @@ services:
       timeout: 5s
       retries: 3
 
-  wait-for-postgres:
-    image: atkrad/wait4x:${WAITER_VERSION_TAG}
-    depends_on:
-      - postgres
-    command: postgresql "postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}?sslmode=disable" -t 90s -i 2000ms
-    networks:
-      - backend
-
   s3:
     restart: always
     image: minio/minio:${MINIO_VERSION_TAG}
-    networks:
-      - frontend
-      - backend
+    profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${S3_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${S3_VIRTUAL_HOST}
@@ -95,21 +81,12 @@ services:
       retries: 3
 
   createbuckets:
-    image: minio/mc:${MINIO_MC_VERSION_TAG}
-    entrypoint: >
-      /bin/sh -c "
-      sleep 15;
-      /usr/bin/mc config host add myminio http://s3:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
-      /usr/bin/mc mb myminio/${MLFLOW_BUCKET_NAME} --ignore-existing;
-      /usr/bin/mc mb myminio/${DVC_BUCKET_NAME} --ignore-existing --with-versioning;
-      /usr/bin/mc mb myminio/${CELERY_DATA_HOLDER_BUCKET_NAME} --ignore-existing --with-versioning;
-      /usr/bin/mc admin user svcacct add --access-key "${MINIO_ACCESS_KEY}" --secret-key "${MINIO_SECRET_ACCESS_KEY}" myminio ${MINIO_ROOT_USER};
-      exit 0;
-      "
+    profiles: [ "techstack" ]
   
   mlflow-server:
     restart: always
-    image: ghcr.io/fhswf-study-projects/mlflow-server:${DEPLOY_ENV}
+    image: ghcr.io/fhswf-study-projects/mlflow-server:latest
+    profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${MLFLOW_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${MLFLOW_VIRTUAL_HOST}
@@ -122,7 +99,9 @@ services:
       - ARTIFACTS_DESTINATION=s3://${MLFLOW_BUCKET_NAME}
 
   otel-lgtm:
+    restart: always
     image: grafana/otel-lgtm:${OTEL_VERSION_TAG}
+    profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${OTEL_VIRTUAL_HOST}
       - LETSENCRYPT_HOST=${OTEL_VIRTUAL_HOST}
@@ -147,21 +126,19 @@ services:
   # Services
   pipeline-api:
     restart: always
-    container_name: pipeline-api-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
+    profiles: [ "services" ]
     networks:
       - frontend
-      - backend
     environment:
       - VIRTUAL_HOST=${FASTAPI_VIRTUAL_HOST}
       - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=${FASTAPI_VIRTUAL_HOST}
-      - SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${SWAGGER_DOCS_BASIC_AUTH_PASSWORD}
-      - SWAGGER_DOCS_BASIC_AUTH_USERNAME=${SWAGGER_DOCS_BASIC_AUTH_USERNAME}
       - S3_BUCKET_NAME=${DVC_BUCKET_NAME}
       - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
       - S3_ACCESS_KEY_ID=${MINIO_ACCESS_KEY}
       - S3_SECRET_ACCESS_KEY=${MINIO_SECRET_ACCESS_KEY}
+      - API_BEARER_TOKEN=${API_TOKEN}
       - CELERY_DEFAULT_QUEUE=${CELERY_DEFAULT_QUEUE}
       - CELERY_BACKEND_CONNECTION=${CELERY_BACKEND_CONNECTION}
       - CELERY_BROKER_CONNECTION=${CELERY_BROKER_CONNECTION}
@@ -174,8 +151,8 @@ services:
 
   streamlit-ui:
     restart: always
-    container_name: streamlit-ui-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
+    profiles: [ "services" ]
     networks:
       - frontend
     environment:
@@ -193,10 +170,8 @@ services:
 
   data-processor:
     restart: always
-    container_name: data-processor-${DEPLOY_ENV}
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
-    networks:
-      - backend
+    profiles: [ "services" ]
     environment:
       - C_FORCE_ROOT=false
       - MPLCONFIGDIR=/usr/src/app/artifacts
@@ -219,3 +194,8 @@ volumes:
   certs:
   html:
   acme:
+
+networks:
+  frontend:
+    driver: bridge
+  

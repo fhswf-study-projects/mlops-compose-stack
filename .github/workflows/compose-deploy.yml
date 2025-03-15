@@ -2,10 +2,11 @@ name: Deploy to VPS
 
 on:
   workflow_call:
+  workflow_dispatch:
 
 env:
   # Use for multi-branch deployment
-  DEPLOY_ENV: ${{ github.head_ref || github.ref_name }}
+  DEPLOY_ENV: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
@@ -39,6 +40,8 @@ jobs:
             export POSTGRES_VERSION_TAG=${{ vars.POSTGRES_VERSION_TAG }}
             export RABBITMQ_VERSION_TAG=${{ vars.RABBITMQ_VERSION_TAG }}
             export NGINX_PROXY_VERSION_TAG=${{ vars.NGINX_PROXY_VERSION_TAG }}
+            export WAITER_VERSION_TAG=${{ vars.WAITER_VERSION_TAG }}
+            export MINIO_MC_VERSION_TAG=${{ vars.MINIO_MC_VERSION_TAG }}
             export ACME_COMPANION_VERSION_TAG=${{ vars.ACME_COMPANION_VERSION_TAG }}
             export S3_ENDPOINT_URL=${{ vars.S3_ENDPOINT_URL }}
             export MINIO_ACCESS_KEY=${{ secrets.MINIO_ACCESS_KEY }}
@@ -76,8 +79,6 @@ jobs:
             export MLFLOW_VIRTUAL_HOST=${{ secrets.MLFLOW_VIRTUAL_HOST }}
             export API_BASE_URL=${{ vars.API_BASE_URL }}
             export API_TOKEN=${{ secrets.API_TOKEN }}
-            export SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_PASSWORD }}
-            export SWAGGER_DOCS_BASIC_AUTH_USERNAME=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_USERNAME }}
             export FASTAPI_OTEL_SERVICE_NAME=${{ vars.FASTAPI_OTEL_SERVICE_NAME }}
             export STREAMLIT_OTEL_SERVICE_NAME=${{ vars.STREAMLIT_OTEL_SERVICE_NAME }}
             export CELERY_OTEL_SERVICE_NAME=${{ vars.CELERY_OTEL_SERVICE_NAME }}
@@ -90,8 +91,39 @@ jobs:
             git clone -b ${{ env.DEPLOY_ENV }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
-            docker compose -f compose.yaml -f compose.deploy.yaml pull -q
-            docker compose -f compose.yaml -f compose.deploy.yaml up -d --no-build
+            echo "Creating external network(s)"
+            ddocker network ls --format '{{.Name}}' \
+              | grep -wq "backend" \
+              || docker network create backend
+            echo "Getting infrastucture up and running"
+            # Start tech stack
+            docker compose \
+              -f compose.yaml \
+              -f compose.deploy.yaml \
+              --profile techstack \
+              -p techstack \
+              up \
+              -d \
+              --no-deps \
+              --no-recreate \
+              --pull "always" \
+              --quiet-pull \
+              --wait \
+              --wait-timeout 600
+            echo "Getting services up and running"
+            docker compose \
+              -f compose.yaml \
+              -f compose.deploy.yaml \
+              --profile services \
+              -p $DEPLOY_ENV \
+              up \
+              -d \
+              --no-deps \
+              --no-recreate \
+              --pull "always" \
+              --quiet-pull \
+              --wait \
+              --wait-timeout 600
             echo "Cleaning up..."
             docker image prune -f
             cd ~
