@@ -92,8 +92,39 @@ jobs:
             git clone -b ${{ env.DEPLOY_ENV }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
-            docker compose -f compose.yaml -f compose.deploy.yaml pull -q
-            docker compose -f compose.yaml -f compose.deploy.yaml up -d --no-build
+            echo "Creating external network(s)"
+            ddocker network ls --format '{{.Name}}' \
+              | grep -wq "backend" \
+              || docker network create backend
+            echo "Getting infrastucture up and running"
+            # Start tech stack
+            docker compose \
+              -f compose.yaml \
+              -f compose.deploy.yaml \
+              --profile techstack \
+              -p techstack \
+              up \
+              -d \
+              --no-deps \
+              --no-recreate \
+              --pull "always" \
+              --quiet-pull \
+              --wait \
+              --wait-timeout 600
+            echo "Getting services up and running"
+            docker compose \
+              -f compose.yaml \
+              -f compose.deploy.yaml \
+              --profile services \
+              -p $DEPLOY_ENV \
+              up \
+              -d \
+              --no-deps \
+              --no-recreate \
+              --pull "always" \
+              --quiet-pull \
+              --wait \
+              --wait-timeout 600
             echo "Cleaning up..."
             docker image prune -f
             cd ~
