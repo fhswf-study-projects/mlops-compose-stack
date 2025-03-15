@@ -2,6 +2,7 @@ name: Deploy to VPS
 
 on:
   workflow_call:
+  workflow_dispatch:
 
 env:
   # Use for multi-branch deployment
