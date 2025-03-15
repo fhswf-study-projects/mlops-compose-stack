@@ -78,8 +78,6 @@ jobs:
             export MLFLOW_VIRTUAL_HOST=${{ secrets.MLFLOW_VIRTUAL_HOST }}
             export API_BASE_URL=${{ vars.API_BASE_URL }}
             export API_TOKEN=${{ secrets.API_TOKEN }}
-            export SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_PASSWORD }}
-            export SWAGGER_DOCS_BASIC_AUTH_USERNAME=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_USERNAME }}
             export FASTAPI_OTEL_SERVICE_NAME=${{ vars.FASTAPI_OTEL_SERVICE_NAME }}
             export STREAMLIT_OTEL_SERVICE_NAME=${{ vars.STREAMLIT_OTEL_SERVICE_NAME }}
             export CELERY_OTEL_SERVICE_NAME=${{ vars.CELERY_OTEL_SERVICE_NAME }}
