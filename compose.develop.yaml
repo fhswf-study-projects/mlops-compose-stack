@@ -21,6 +21,8 @@ services:
 
   # Services
   pipeline-api:
+    expose:
+      - 8080
     build:
       context: ./services/pipeline-api/
       dockerfile: Dockerfile
@@ -35,6 +37,8 @@ services:
       - ./services/pipeline-api/.env
 
   streamlit-ui:
+    expose:
+      - 8501
     build:
       context: ./services/streamlit-ui/
       dockerfile: Dockerfile
