@@ -38,6 +38,9 @@ services:
       timeout: 30s
       retries: 3
 
+  wait-for-rabbitmq:
+    profiles: [ "techstack" ]
+
   postgres:
     restart: always
     profiles: [ "techstack" ]
@@ -58,6 +61,9 @@ services:
       interval: 5s
       timeout: 5s
       retries: 3
+
+  wait-for-postgres:
+    services: [ "techstack" ]
 
   s3:
     restart: always
