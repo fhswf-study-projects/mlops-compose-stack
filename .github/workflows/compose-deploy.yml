@@ -5,6 +5,7 @@ on:
   workflow_dispatch:
 
 env:
+  DEPLOY_BRANCH: ${{ github.head_ref || github.ref_name }}
   # Use for multi-branch deployment
   DEPLOY_ENV: ${{ github.ref_name == 'main' && 'production' || 'staging' }}
   # Use docker.io for Docker Hub if empty
@@ -88,7 +89,7 @@ jobs:
             export OTEL_METRIC_EXPORT_INTERVAL=${{ vars.OTEL_METRIC_EXPORT_INTERVAL }}
             export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=${{ vars.OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED }}
             echo "Getting containers up and running"
-            git clone -b ${{ env.DEPLOY_ENV }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
+            git clone -b ${{ env.DEPLOY_BRANCH }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
             echo "Creating external network(s)"
