@@ -115,25 +115,6 @@ services:
       wait-for-rabbitmq:
         condition: service_completed_successfully
 
-  # Services
-  pipeline-api:
-    depends_on:
-      - postgres
-      - rabbitmq
-      - s3
-
-  streamlit-ui:
-    depends_on:
-      - otel-lgtm
-      - pipeline-api
-
-  data-processor:
-    depends_on:
-      wait-for-postgres:
-        condition: service_completed_successfully
-      wait-for-rabbitmq:
-        condition: service_completed_successfully
-
 volumes:
   rabbitmq_lib:
   rabbitmq_log:
