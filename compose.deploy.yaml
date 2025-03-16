@@ -132,7 +132,7 @@ services:
     profiles: [ "services" ]
     environment:
       - VIRTUAL_HOST=${FASTAPI_VIRTUAL_HOST}
-      - VIRTUAL_PORT=8080
+      - VIRTUAL_PORT=${FASTAPI_VIRTUAL_PORT}
       - LETSENCRYPT_HOST=${FASTAPI_VIRTUAL_HOST}
       - S3_BUCKET_NAME=${DVC_BUCKET_NAME}
       - S3_ENDPOINT_URL=${S3_ENDPOINT_URL}
@@ -155,7 +155,7 @@ services:
     profiles: [ "services" ]
     environment:
       - VIRTUAL_HOST=${STREAMLIT_VIRTUAL_HOST}
-      - VIRTUAL_PORT=8501
+      - VIRTUAL_PORT=${STREAMLIT_VIRTUAL_PORT}
       - LETSENCRYPT_HOST=${STREAMLIT_VIRTUAL_HOST}
       - API_BASE_URL=${API_BASE_URL}
       - API_TOKEN=${API_TOKEN}
