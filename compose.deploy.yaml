@@ -3,8 +3,6 @@ services:
     restart: always
     container_name: nginx-proxy
     profiles: [ "techstack" ]
-    networks:
-      - frontend
     ports:
       - "443:443"
     volumes:
@@ -16,8 +14,6 @@ services:
     image: nginxproxy/acme-companion:${ACME_COMPANION_VERSION_TAG}
     container_name: nginx-proxy-acme
     profiles: [ "techstack" ]
-    networks:
-      - backend
     environment:
       - DEFAULT_EMAIL=${LETSENCRYPT_DEFAULT_EMAIL}
       - NGINX_PROXY_CONTAINER=nginx-proxy
@@ -128,8 +124,6 @@ services:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
     profiles: [ "services" ]
-    networks:
-      - frontend
     environment:
       - VIRTUAL_HOST=${FASTAPI_VIRTUAL_HOST}
       - VIRTUAL_PORT=8080
@@ -153,8 +147,6 @@ services:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
     profiles: [ "services" ]
-    networks:
-      - frontend
     environment:
       - VIRTUAL_HOST=${STREAMLIT_VIRTUAL_HOST}
       - VIRTUAL_PORT=8501
@@ -194,8 +186,3 @@ volumes:
   certs:
   html:
   acme:
-
-networks:
-  frontend:
-    driver: bridge
-  
