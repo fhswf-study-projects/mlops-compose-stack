@@ -63,7 +63,7 @@ services:
       retries: 3
 
   wait-for-postgres:
-    services: [ "techstack" ]
+    profiles: [ "techstack" ]
 
   s3:
     restart: always
