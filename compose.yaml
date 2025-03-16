@@ -3,16 +3,12 @@ services:
     image: nginxproxy/nginx-proxy:${NGINX_PROXY_VERSION_TAG}
     ports:
       - "80:80"
-    networks:
-      - backend
     volumes:
       - ./configs/nginx/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   rabbitmq:
     image: rabbitmq:${RABBITMQ_VERSION_TAG}
-    networks:
-      - backend
     environment:
       - VIRTUAL_HOST=rabbitmq.localhost
       - VIRTUAL_PORT=15672
@@ -30,13 +26,9 @@ services:
     depends_on:
       - rabbitmq
     command: rabbitmq "amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASSWORD}@rabbitmq:5672/" -t 90s -i 2000ms
-    networks:
-      - backend
   
   postgres:
     image: postgres:${POSTGRES_VERSION_TAG}
-    networks:
-      - backend
     environment:
       - POSTGRES_USER=${PG_USER}
       - POSTGRES_PASSWORD=${PG_PASSWORD}
@@ -55,16 +47,12 @@ services:
 
   wait-for-postgres:
     image: atkrad/wait4x
-    networks:
-      - backend
     depends_on:
       - postgres
     command: postgresql "postgresql://${PG_MLFLOW_USER}:${PG_MLFLOW_PASSWORD}@postgres:5432/${PG_MLFLOW_DATABASE}?sslmode=disable" -t 90s -i 2000ms
 
   s3:
     image: minio/minio:${MINIO_VERSION_TAG}
-    networks:
-      - backend
     environment:
       - VIRTUAL_HOST=s3.localhost
       - VIRTUAL_PORT=9001
@@ -76,8 +64,6 @@ services:
 
   createbuckets:
     image: minio/mc
-    networks:
-      - backend
     depends_on:
       - s3
     entrypoint: >
@@ -92,8 +78,6 @@ services:
       "
 
   mlflow-server:
-    networks:
-      - backend
     environment:
       - VIRTUAL_HOST=mlflow.localhost
       - VIRTUAL_PORT=5000
@@ -109,8 +93,6 @@ services:
 
   otel-lgtm:
     image: grafana/otel-lgtm:${OTEL_VERSION_TAG}
-    networks:
-      - backend
     environment:
       - VIRTUAL_HOST=monitoring.localhost
       - VIRTUAL_PORT=3000
@@ -135,8 +117,6 @@ services:
 
   # Services
   pipeline-api:
-    networks:
-      - backend
     depends_on:
       - postgres
       - rabbitmq
@@ -148,8 +128,6 @@ services:
       - pipeline-api
 
   data-processor:
-    networks:
-      - backend
     depends_on:
       wait-for-postgres:
         condition: service_completed_successfully
@@ -166,5 +144,6 @@ volumes:
   prometheus_data:
 
 networks:
-  external: 
+  default:
     name: backend
+    external: true
