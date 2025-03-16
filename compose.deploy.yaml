@@ -51,9 +51,9 @@ services:
         limits:
           cpus: "0.20"
           memory: "100M"
-      reservations:
-        cpus: "0.05"
-        memory: "20M"
+        reservations:
+          cpus: "0.05"
+          memory: "20M"
     container_name: nginx-proxy-acme
     profiles: [ "techstack" ]
     environment:
