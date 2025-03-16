@@ -76,12 +76,12 @@ jobs:
             export S3_VIRTUAL_HOST=${{ secrets.S3_VIRTUAL_HOST }}
             export RABBITMQ_VIRTUAL_HOST=${{ secrets.RABBITMQ_VIRTUAL_HOST }}
             export FASTAPI_VIRTUAL_HOST=${{ secrets.FASTAPI_VIRTUAL_HOST }}
+            export FASTAPI_VIRTUAL_PORT=${{ vars.FASTAPI_VIRTUAL_PORT }}
             export STREAMLIT_VIRTUAL_HOST=${{ secrets.STREAMLIT_VIRTUAL_HOST }}
+            export STREAMLIT_VIRTUAL_PORT=${{ vars.STREAMLIT_VIRTUAL_PORT }}
             export MLFLOW_VIRTUAL_HOST=${{ secrets.MLFLOW_VIRTUAL_HOST }}
             export API_BASE_URL=${{ vars.API_BASE_URL }}
             export API_TOKEN=${{ secrets.API_TOKEN }}
-            export SWAGGER_DOCS_BASIC_AUTH_PASSWORD=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_PASSWORD }}
-            export SWAGGER_DOCS_BASIC_AUTH_USERNAME=${{ secrets.SWAGGER_DOCS_BASIC_AUTH_USERNAME }}
             export FASTAPI_OTEL_SERVICE_NAME=${{ vars.FASTAPI_OTEL_SERVICE_NAME }}
             export STREAMLIT_OTEL_SERVICE_NAME=${{ vars.STREAMLIT_OTEL_SERVICE_NAME }}
             export CELERY_OTEL_SERVICE_NAME=${{ vars.CELERY_OTEL_SERVICE_NAME }}
@@ -94,8 +94,39 @@ jobs:
             git clone -b ${{ env.DEPLOY_BRANCH }} --single-branch https://github.com/${{ env.REPO_NAME }}.git
             cd mlops-compose-stack
             git pull
-            docker compose -f compose.yaml -f compose.deploy.yaml pull -q
-            docker compose -f compose.yaml -f compose.deploy.yaml up -d --no-build
+            echo "Creating external network(s)"
+            docker network ls --format '{{.Name}}' \
+              | grep -wq "proxy" \
+              || docker network create proxy
+            echo "Getting infrastucture up and running"
+            # Start tech stack
+            docker compose \
+              -f compose.yaml \
+              -f compose.deploy.yaml \
+              --profile techstack \
+              -p techstack \
+              up \
+              -d \
+              --no-deps \
+              --no-recreate \
+              --pull "always" \
+              --quiet-pull \
+              --wait \
+              --wait-timeout 600
+            echo "Getting services up and running"
+            docker compose \
+              -f compose.yaml \
+              -f compose.deploy.yaml \
+              --profile services \
+              -p $DEPLOY_ENV \
+              up \
+              -d \
+              --no-deps \
+              --no-recreate \
+              --pull "always" \
+              --quiet-pull \
+              --wait \
+              --wait-timeout 600
             echo "Cleaning up..."
             docker image prune -f
             cd ~
