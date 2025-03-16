@@ -145,5 +145,5 @@ volumes:
 
 networks:
   default:
-    name: backend
+    name: proxy
     external: true
