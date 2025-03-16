@@ -8,21 +8,21 @@ services:
        delay: 5s
        max_attempts: 3
        window: 120s
-     update_config:
-       parallelism: 2
-       delay: 10s
-       order: stop-first
-     rollback_config:
-       parallelism: 2
-       delay: 10s
-       order: stop-first
-     resources:
-       limits:
-         cpus: "0.20"
-         memory: "100M"
-       reservations:
-         cpus: "0.05"
-         memory: "20M"
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: "100M"
+        reservations:
+          cpus: "0.05"
+          memory: "20M"
     profiles: [ "techstack" ]
     ports:
       - "443:443"
@@ -81,10 +81,10 @@ services:
         parallelism: 2
         delay: 10s
         order: stop-first
-       resources:
-         limits:
-           cpus: "0.30"
-           memory: "256M"
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: "256M"
     profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${RABBITMQ_VIRTUAL_HOST}
