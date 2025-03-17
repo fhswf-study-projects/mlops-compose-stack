@@ -185,16 +185,7 @@ services:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlflow-server:latest
     deploy:
-      restart_policy:
-        condition: on-failure
-        delay: 120s
-        max_attempts: 3
-        window: 600s
       update_config:
-        parallelism: 2
-        delay: 10s
-        order: stop-first
-      rollback_config:
         parallelism: 2
         delay: 10s
         order: stop-first
