@@ -201,7 +201,6 @@ services:
       resources:
         limits:
           cpus: "1.00"
-          memory: "512M"
     profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${MLFLOW_VIRTUAL_HOST}
@@ -364,11 +363,7 @@ services:
         order: stop-first
       resources:
         limits:
-          cpus: "0.50"
-          memory: "512M"
-        reservations:
-          cpus: "0.20"
-          memory: "50M"
+          cpus: "1.50"
     profiles: [ "services" ]
     environment:
       - C_FORCE_ROOT=false
