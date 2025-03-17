@@ -187,9 +187,9 @@ services:
     deploy:
       restart_policy:
         condition: on-failure
-        delay: 5s
+        delay: 120s
         max_attempts: 3
-        window: 120s
+        window: 600s
       update_config:
         parallelism: 2
         delay: 10s
