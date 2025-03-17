@@ -348,7 +348,7 @@ services:
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
     deploy:
       mode: replicated
-      replicas: 3
+      replicas: 2
       restart_policy:
         condition: on-failure
         delay: 20s
