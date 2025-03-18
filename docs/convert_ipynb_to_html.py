@@ -4,6 +4,7 @@ import logging
 
 try:
     exporter = nbconvert.HTMLExporter()
+    logging.info(os.listdir())
     all_notebooks = [book for book in os.listdir('_static\\notebooks') if ".ipynb" in book]
     for notebook in all_notebooks:
 
