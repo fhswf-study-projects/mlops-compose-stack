@@ -10,4 +10,8 @@ MLOPS documentation
    :caption: Architecture-Overview:
 
    arc
+
+.. toctree::
+   :caption: Services:
+
    services
