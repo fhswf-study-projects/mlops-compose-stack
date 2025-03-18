@@ -55,6 +55,7 @@ jobs:
           mkdir -p gh-pages
           touch gh-pages/.nojekyll
           cp -r docs/_build/html/* gh-pages/
+          
 
       - name: Deploy to GitHub Pages
         if: ${{ github.event_name == 'push' }}
