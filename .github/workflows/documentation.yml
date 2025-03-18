@@ -51,6 +51,7 @@ jobs:
           sphinx-apidoc -o pipeline-api -H Pipeline-API ../repos/mlops-pipeline-api/app
           sphinx-build -b html . _build/html
           cd .. 
+          rm -rf gh-pages
           mkdir -p gh-pages
           touch gh-pages/.nojekyll
           cp -r docs/_build/html/* gh-pages/
