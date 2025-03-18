@@ -45,7 +45,7 @@ jobs:
           rm -rf _static/notebooks
           mkdir -p _static/notebooks
           cp -r ../repos/mlops-data-processor/notebooks/* _static/notebooks
-          python convert_ipynb_to_html
+          python convert_ipynb_to_html.py
           sphinx-apidoc -o streamlit-ui -H Streamlit-UI ../repos/mlops-streamlit-ui/app
           sphinx-apidoc -o data-processor -H Data-Processor ../repos/mlops-data-processor/app
           sphinx-apidoc -o pipeline-api -H Pipeline-API ../repos/mlops-pipeline-api/app
