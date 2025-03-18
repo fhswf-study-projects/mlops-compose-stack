@@ -12,5 +12,5 @@ try:
         new_nb_name = notebook.replace(".ipynb", ".html")
         with open(f"_static\\notebooks\\{new_nb_name}", "w", encoding="utf-8") as f:
             f.write(body)
-except:
-    logging.warning("FAILED TO DOCUMENT NOTEBOOKS")
+except Exception as e:
+    logging.error(f"FAILED TO DOCUMENT NOTEBOOKS: {e}")
