@@ -7,33 +7,7 @@ MLOPS documentation
 
 
 .. toctree::
-   :caption: Contents:
+   :caption: Architecture-Overview:
 
-.. toctree::
-   :maxdepth: 2
-   :caption: Description
-
-   introduction
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Data-Procssor
-
-   data-processor/modules
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Streamlit-UI
-
-   streamlit-ui/modules
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Pipeline-API
-   
-   pipeline-api/modules
+   arc
+   services

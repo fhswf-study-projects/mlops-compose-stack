@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>3. Context and Scope &mdash; FH-SWF MLOPS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/my_theme.css?v=8df07bdd" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="4. Solution Strategy" href="solution_strategy.html" />
+    <link rel="prev" title="2. Constraints" href="constraints.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: black" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FH-SWF MLOPS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction and Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">2. Constraints</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Context and Scope</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#adult-income-context">3.1 Adult Income Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#technical-context">3.2 Technical Context</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="solution_strategy.html">4. Solution Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_block_view.html">5. Building Block View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runtime_view.html">6. Runtime View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html">Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#crosscutting-concepts">Crosscutting Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#architecture-decisions">Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#quality-requirements">Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#risks-and-technical-debt">Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#glossary">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: black" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FH-SWF MLOPS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">3. Context and Scope</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/context_and_scope.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="context-and-scope">
+<h1>3. Context and Scope<a class="headerlink" href="#context-and-scope" title="Link to this heading"></a></h1>
+<p>This section describes the technical framework and the dataset used in this project.
+The developed <strong>MLOps pipeline</strong> ensures that machine learning models can be efficiently trained,
+managed, and deployed.</p>
+<section id="adult-income-context">
+<h2>3.1 Adult Income Context<a class="headerlink" href="#adult-income-context" title="Link to this heading"></a></h2>
+<p>The <strong>Adult Income Dataset</strong> contains demographic and income-related information.
+The goal is to build a classification model that predicts whether an individual’s
+income is above or below 50.000$.</p>
+<p>To better understand the dataset, several Jupyter Notebook analyses are available:</p>
+<details>
+  <summary>📊 Click to Expand: Environment for Exploration</summary>
+  <iframe src="_static/notebooks/00_Umgebung einrichten-en.html" width="100%" height="600px" style="border:none;"></iframe>
+</details><details>
+<summary>📊 Click to Expand: Data Exploration & Validation</summary>
+<iframe src="_static/notebooks/01_Daten_Exploration_und_Validierung-en.html" width="100%" height="600px" style="border:none;"></iframe>
+</details><details>
+<summary>📊 Click to Expand: Data Preparation</summary>
+<iframe src="_static/notebooks/02_Daten_Vorverarbeitung-en.html" width="100%" height="600px" style="border:none;"></iframe>
+</details></section>
+<section id="technical-context">
+<h2>3.2 Technical Context<a class="headerlink" href="#technical-context" title="Link to this heading"></a></h2>
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>context_view</title>
+<meta charset="utf-8"/>
+</head>
+<body><div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;dark-mode&quot;:&quot;light&quot;,&quot;toolbar&quot;:&quot;zoom layers tags lightbox&quot;,&quot;edit&quot;:&quot;_blank&quot;,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;Electron\&quot; agent=\&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36\&quot; version=\&quot;26.0.16\&quot;&gt;\n  &lt;diagram name=\&quot;Seite-1\&quot; id=\&quot;IkjPFkrm3NSCvPRxarnA\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1634\&quot; dy=\&quot;955\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;827\&quot; pageHeight=\&quot;1169\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-10\&quot; value=\&quot;Request\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-1\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-9\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-1\&quot; value=\&quot;Streamlit User-Interface\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;310\&quot; y=\&quot;420\&quot; width=\&quot;150\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-8\&quot; value=\&quot;Make inputs and send a request for a prediction&amp;lt;div&amp;gt;Users can also give feedback, if the prediction was correct or not&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-4\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-4\&quot; value=\&quot;\&quot; style=\&quot;shape=mxgraph.signs.people.man_1;html=1;pointerEvents=1;fillColor=#000000;strokeColor=none;verticalLabelPosition=bottom;verticalAlign=top;align=center;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;375\&quot; y=\&quot;250\&quot; width=\&quot;20\&quot; height=\&quot;58\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-7\&quot; value=\&quot;User\&quot; style=\&quot;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;355\&quot; y=\&quot;210\&quot; width=\&quot;60\&quot; height=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-12\&quot; value=\&quot;Prediction\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=1;entryDx=0;entryDy=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-9\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot; /&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-24\&quot; value=\&quot;Sending&amp;lt;div&amp;gt;Inputs&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-9\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-13\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-26\&quot; value=\&quot;Sending&amp;lt;div&amp;gt;Converterd Data&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-9\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-21\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;100\&quot; y=\&quot;540\&quot; /&gt;\n              &lt;mxPoint x=\&quot;100\&quot; y=\&quot;788\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-9\&quot; value=\&quot;FastAPI\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;310\&quot; y=\&quot;520\&quot; width=\&quot;150\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-16\&quot; value=\&quot;Processing:&amp;lt;div&amp;gt;Cleaning,&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;Validationg,&amp;amp;nbsp;&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;Great Expectations&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-13\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-18\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;mxPoint x=\&quot;540\&quot; y=\&quot;669\&quot; as=\&quot;targetPoint\&quot; /&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-20\&quot; value=\&quot;Creating and saving Model\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-13\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;mxPoint x=\&quot;385\&quot; y=\&quot;767.5\&quot; as=\&quot;targetPoint\&quot; /&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-25\&quot; value=\&quot;Sending back&amp;lt;div&amp;gt;Converted Data&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-13\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-9\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-13\&quot; value=\&quot;Data-Processor\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;310\&quot; y=\&quot;649\&quot; width=\&quot;150\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-15\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-14\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-13\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-14\&quot; value=\&quot;Adult Income Dataset\&quot; style=\&quot;sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.users.csv_file;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;170\&quot; y=\&quot;647.5\&quot; width=\&quot;59\&quot; height=\&quot;43\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-18\&quot; value=\&quot;MinIO Bucket&amp;lt;div&amp;gt;(Data-Versioning)&amp;lt;/div&amp;gt;\&quot; style=\&quot;sketch=0;outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=0;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.bucket;fillColor=#000000;strokeColor=#000000;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;620\&quot; y=\&quot;630\&quot; width=\&quot;75\&quot; height=\&quot;78\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-27\&quot; value=\&quot;Prediction\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;N05U6FecY4BFe01yGVfm-21\&quot; target=\&quot;N05U6FecY4BFe01yGVfm-9\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot;&gt;\n            &lt;Array as=\&quot;points\&quot;&gt;\n              &lt;mxPoint x=\&quot;750\&quot; y=\&quot;790\&quot; /&gt;\n              &lt;mxPoint x=\&quot;750\&quot; y=\&quot;540\&quot; /&gt;\n            &lt;/Array&gt;\n          &lt;/mxGeometry&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-21\&quot; value=\&quot;MLflow\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;fontColor=#333333;strokeColor=#666666;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;310\&quot; y=\&quot;767.5\&quot; width=\&quot;150\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;N05U6FecY4BFe01yGVfm-29\&quot; value=\&quot;\&quot; style=\&quot;verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.health_monitoring;\&quot; vertex=\&quot;1\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;431.71\&quot; y=\&quot;658.25\&quot; width=\&quot;25.29\&quot; height=\&quot;21.5\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n      &lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n&lt;/mxfile&gt;\n&quot;}"></div>
+<script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+</body>
+</html><p>🖥️ <strong>Streamlit User Interface:</strong></p>
+<ul class="simple">
+<li><p>A simple web frontend where users can enter their data.</p></li>
+</ul>
+<p>🚀 <strong>FastAPI (Backend):</strong></p>
+<ul class="simple">
+<li><p>Receives user inputs and processes them.</p></li>
+<li><p>Communicates with the Data Processor to generate predictions.</p></li>
+<li><p>Returns the prediction result to the user.</p></li>
+</ul>
+<p>🧠 <strong>Data Processor (Core Component):</strong></p>
+<ul class="simple">
+<li><p>Trains and stores ML models.</p></li>
+<li><p>Performs predictions.</p></li>
+<li><p>Stores all data processing steps in MinIO and manages model versions with MLflow.</p></li>
+</ul>
+<p>📦 <strong>MLflow (Model Management):</strong></p>
+<ul class="simple">
+<li><p>Manages different model versions.</p></li>
+<li><p>Stores model metrics and artifacts.</p></li>
+</ul>
+<p>🗄️ <strong>MinIO (Data Versioning):</strong></p>
+<ul class="simple">
+<li><p>Stores different dataset versions.</p></li>
+<li><p>Ensures reproducibility of the pipeline.</p></li>
+</ul>
+<p><strong>Why is this Context Important?</strong></p>
+<p>This MLOps pipeline is designed to ensure that machine learning models are not
+just trained once but can be continuously improved and efficiently deployed.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="constraints.html" class="btn btn-neutral float-left" title="2. Constraints" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="solution_strategy.html" class="btn btn-neutral float-right" title="4. Solution Strategy" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

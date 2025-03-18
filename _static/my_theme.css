@@ -1,0 +1,41 @@
+.wy-nav-content {
+    max-width: 1200px !important;
+}
+
+
+
+details {
+margin: 10px 0;
+padding: 10px;
+border: 2px solid #2A9D8F;
+border-radius: 8px;
+background-color: #ffffff;
+transition: all 0.3s ease-in-out;
+}
+
+details:hover {
+background-color: #ffffff;
+}
+
+summary {
+font-size: 1.2em;
+font-weight: bold;
+color: #2A9D8F;
+cursor: pointer;
+padding: 8px;
+}
+
+summary::marker {
+content: "▶ ";
+font-size: 1.2em;
+}
+
+details[open] summary::marker {
+content: "▼ ";
+}
+
+iframe {
+margin-top: 10px;
+border-radius: 5px;
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}

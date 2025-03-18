@@ -10,7 +10,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css" />
+      <link rel="stylesheet" type="text/css" href="../_static/my_theme.css?v=8df07bdd" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -46,16 +46,21 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Description</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Data-Procssor</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../data-processor/modules.html">Data-Processor</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Streamlit-UI</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction and Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../constraints.html">2. Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../context_and_scope.html">3. Context and Scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../solution_strategy.html">4. Solution Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../building_block_view.html">5. Building Block View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../runtime_view.html">6. Runtime View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html">Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#crosscutting-concepts">Crosscutting Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#architecture-decisions">Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#quality-requirements">Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#risks-and-technical-debt">Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#glossary">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-processor/modules.html">Data-Processor</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Streamlit-UI</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">app package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
@@ -77,9 +82,6 @@
 </li>
 </ul>
 </li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Pipeline-API</span></p>
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="../pipeline-api/modules.html">Pipeline-API</a></li>
 </ul>
 
@@ -97,6 +99,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../services.html">&lt;no title&gt;</a></li>
           <li class="breadcrumb-item"><a href="modules.html">Streamlit-UI</a></li>
       <li class="breadcrumb-item active">app package</li>
       <li class="wy-breadcrumbs-aside">
@@ -158,6 +161,11 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="app.constants.EnvConfig.PORT">
+<span class="sig-name descname"><span class="pre">PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VIRTUAL_PORT'</span></em><a class="headerlink" href="#app.constants.EnvConfig.PORT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="app.constants.EnvConfig.S3_ACCESS_KEY_ID">
 <span class="sig-name descname"><span class="pre">S3_ACCESS_KEY_ID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'S3_ACCESS_KEY_ID'</span></em><a class="headerlink" href="#app.constants.EnvConfig.S3_ACCESS_KEY_ID" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -175,16 +183,6 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="app.constants.EnvConfig.S3_SECRET_ACCESS_KEY">
 <span class="sig-name descname"><span class="pre">S3_SECRET_ACCESS_KEY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'S3_SECRET_ACCESS_KEY'</span></em><a class="headerlink" href="#app.constants.EnvConfig.S3_SECRET_ACCESS_KEY" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="app.constants.EnvConfig.SWAGGER_DOCS_BASIC_AUTH_PASSWORD">
-<span class="sig-name descname"><span class="pre">SWAGGER_DOCS_BASIC_AUTH_PASSWORD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SWAGGER_DOCS_BASIC_AUTH_PASSWORD'</span></em><a class="headerlink" href="#app.constants.EnvConfig.SWAGGER_DOCS_BASIC_AUTH_PASSWORD" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="app.constants.EnvConfig.SWAGGER_DOCS_BASIC_AUTH_USERNAME">
-<span class="sig-name descname"><span class="pre">SWAGGER_DOCS_BASIC_AUTH_USERNAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'SWAGGER_DOCS_BASIC_AUTH_USERNAME'</span></em><a class="headerlink" href="#app.constants.EnvConfig.SWAGGER_DOCS_BASIC_AUTH_USERNAME" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

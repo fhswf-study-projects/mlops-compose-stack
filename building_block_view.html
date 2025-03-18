@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5. Building Block View &mdash; FH-SWF MLOPS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/my_theme.css?v=8df07bdd" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="6. Runtime View" href="runtime_view.html" />
+    <link rel="prev" title="4. Solution Strategy" href="solution_strategy.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: black" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FH-SWF MLOPS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction and Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">2. Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context_and_scope.html">3. Context and Scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solution_strategy.html">4. Solution Strategy</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Building Block View</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-building-blocks">5.1 Overview of Building Blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#detailed-breakdown-of-components">5.2 Detailed Breakdown of Components</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="runtime_view.html">6. Runtime View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html">Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#crosscutting-concepts">Crosscutting Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#architecture-decisions">Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#quality-requirements">Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#risks-and-technical-debt">Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html#glossary">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: black" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FH-SWF MLOPS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">5. Building Block View</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/building_block_view.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="building-block-view">
+<h1>5. Building Block View<a class="headerlink" href="#building-block-view" title="Link to this heading"></a></h1>
+<section id="overview-of-building-blocks">
+<h2>5.1 Overview of Building Blocks<a class="headerlink" href="#overview-of-building-blocks" title="Link to this heading"></a></h2>
+<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=5,IE=9" ><![endif]-->
+<!DOCTYPE html>
+<html>
+<head>
+<title>technical_overview</title>
+<meta charset="utf-8"/>
+</head>
+<body><div class="mxgraph" style="max-width:100%;border:1px solid transparent;" data-mxgraph="{&quot;highlight&quot;:&quot;#0000ff&quot;,&quot;nav&quot;:true,&quot;resize&quot;:true,&quot;dark-mode&quot;:&quot;light&quot;,&quot;toolbar&quot;:&quot;zoom layers tags lightbox&quot;,&quot;edit&quot;:&quot;_blank&quot;,&quot;xml&quot;:&quot;&lt;mxfile host=\&quot;Electron\&quot; agent=\&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.0.16 Chrome/132.0.6834.196 Electron/34.2.0 Safari/537.36\&quot; version=\&quot;26.0.16\&quot;&gt;\n  &lt;diagram name=\&quot;Seite-1\&quot; id=\&quot;C0mX4AlOYedvDiONm1UZ\&quot;&gt;\n    &lt;mxGraphModel dx=\&quot;1047\&quot; dy=\&quot;955\&quot; grid=\&quot;1\&quot; gridSize=\&quot;10\&quot; guides=\&quot;1\&quot; tooltips=\&quot;1\&quot; connect=\&quot;1\&quot; arrows=\&quot;1\&quot; fold=\&quot;1\&quot; page=\&quot;1\&quot; pageScale=\&quot;1\&quot; pageWidth=\&quot;827\&quot; pageHeight=\&quot;1169\&quot; math=\&quot;0\&quot; shadow=\&quot;0\&quot;&gt;\n      &lt;root&gt;\n        &lt;mxCell id=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;1\&quot; parent=\&quot;0\&quot; /&gt;\n        &lt;mxCell id=\&quot;xq37qWWrgBNqL2LhlARQ-3\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-40\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-41\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-40\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;950\&quot; y=\&quot;170\&quot; width=\&quot;550\&quot; height=\&quot;370\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-2\&quot; value=\&quot;CI&amp;amp;nbsp;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1020.0000000000001\&quot; y=\&quot;340\&quot; width=\&quot;70\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-5\&quot; value=\&quot;Server\&quot; style=\&quot;image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/storage/Datacenter_Server_Half_Rack_ToR.svg;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1690.0000000000002\&quot; y=\&quot;357.7\&quot; width=\&quot;88.2\&quot; height=\&quot;114.6\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-6\&quot; value=\&quot;\&quot; style=\&quot;image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1012.32\&quot; y=\&quot;440\&quot; width=\&quot;85.37\&quot; height=\&quot;70\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-9\&quot; value=\&quot;&amp;lt;b&amp;gt;Service:&amp;amp;nbsp;&amp;lt;/b&amp;gt;&amp;lt;div&amp;gt;&amp;lt;b&amp;gt;Frontend, Streamlit&amp;lt;/b&amp;gt;&amp;lt;/div&amp;gt;\&quot; style=\&quot;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;970.01\&quot; y=\&quot;180\&quot; width=\&quot;170\&quot; height=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-13\&quot; value=\&quot;&amp;lt;div&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-11\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-2\&quot; edge=\&quot;1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-11\&quot; value=\&quot;\&quot; style=\&quot;dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1022.5000000000001\&quot; y=\&quot;220\&quot; width=\&quot;65\&quot; height=\&quot;65\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-14\&quot; value=\&quot;publish\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.49;entryY=0.031;entryDx=0;entryDy=0;entryPerimeter=0;\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-2\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-6\&quot; edge=\&quot;1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-17\&quot; value=\&quot;CI\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1190\&quot; y=\&quot;340\&quot; width=\&quot;70\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-18\&quot; value=\&quot;\&quot; style=\&quot;image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1182.32\&quot; y=\&quot;440\&quot; width=\&quot;85.37\&quot; height=\&quot;70\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-19\&quot; value=\&quot;&amp;lt;b&amp;gt;Service:&amp;amp;nbsp;&amp;lt;/b&amp;gt;&amp;lt;div&amp;gt;&amp;lt;b&amp;gt;Backend, FastAPI&amp;lt;/b&amp;gt;&amp;lt;/div&amp;gt;\&quot; style=\&quot;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1140\&quot; y=\&quot;180\&quot; width=\&quot;170\&quot; height=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-20\&quot; value=\&quot;&amp;lt;div&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-21\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-17\&quot; edge=\&quot;1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-21\&quot; value=\&quot;\&quot; style=\&quot;dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1192.5\&quot; y=\&quot;220\&quot; width=\&quot;65\&quot; height=\&quot;65\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-22\&quot; value=\&quot;publish\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.49;entryY=0.031;entryDx=0;entryDy=0;entryPerimeter=0;\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-17\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-18\&quot; edge=\&quot;1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-23\&quot; value=\&quot;CI\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1360\&quot; y=\&quot;340\&quot; width=\&quot;70\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-24\&quot; value=\&quot;\&quot; style=\&quot;image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1352.32\&quot; y=\&quot;440\&quot; width=\&quot;85.37\&quot; height=\&quot;70\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-25\&quot; value=\&quot;&amp;lt;b&amp;gt;Service:&amp;amp;nbsp;&amp;lt;/b&amp;gt;&amp;lt;div&amp;gt;&amp;lt;b&amp;gt;Backend, Data-Processor&amp;lt;/b&amp;gt;&amp;lt;/div&amp;gt;\&quot; style=\&quot;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1310\&quot; y=\&quot;180\&quot; width=\&quot;170\&quot; height=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-26\&quot; value=\&quot;&amp;lt;div&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;&amp;lt;div&amp;gt;&amp;lt;br&amp;gt;&amp;lt;/div&amp;gt;\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-27\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-23\&quot; edge=\&quot;1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-27\&quot; value=\&quot;\&quot; style=\&quot;dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1362.5\&quot; y=\&quot;220\&quot; width=\&quot;65\&quot; height=\&quot;65\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-28\&quot; value=\&quot;publish\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.49;entryY=0.031;entryDx=0;entryDy=0;entryPerimeter=0;\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-23\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-24\&quot; edge=\&quot;1\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-49\&quot; value=\&quot;CD\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; parent=\&quot;1\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1712.68\&quot; y=\&quot;247.7\&quot; width=\&quot;40\&quot; height=\&quot;40\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;xq37qWWrgBNqL2LhlARQ-1\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.488;entryY=0.012;entryDx=0;entryDy=0;entryPerimeter=0;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-49\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-5\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;xq37qWWrgBNqL2LhlARQ-2\&quot; value=\&quot;\&quot; style=\&quot;group\&quot; vertex=\&quot;1\&quot; connectable=\&quot;0\&quot; parent=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;1530\&quot; y=\&quot;240\&quot; width=\&quot;110\&quot; height=\&quot;230\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-41\&quot; value=\&quot;\&quot; style=\&quot;rounded=0;whiteSpace=wrap;html=1;\&quot; parent=\&quot;xq37qWWrgBNqL2LhlARQ-2\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry width=\&quot;110\&quot; height=\&quot;230\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-35\&quot; value=\&quot;\&quot; style=\&quot;dashed=0;outlineConnect=0;html=1;align=center;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;shape=mxgraph.weblogos.github\&quot; parent=\&quot;xq37qWWrgBNqL2LhlARQ-2\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;23.920000000000073\&quot; y=\&quot;40\&quot; width=\&quot;65\&quot; height=\&quot;65\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-36\&quot; value=\&quot;&amp;lt;b&amp;gt;Compose-Stack&amp;lt;/b&amp;gt;\&quot; style=\&quot;text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;\&quot; parent=\&quot;xq37qWWrgBNqL2LhlARQ-2\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;6.420000000000073\&quot; y=\&quot;10\&quot; width=\&quot;100\&quot; height=\&quot;30\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;-5nR3zmqGwLBVs8ZNcRx-47\&quot; value=\&quot;Compose\&quot; style=\&quot;image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Docker.svg;\&quot; parent=\&quot;xq37qWWrgBNqL2LhlARQ-2\&quot; vertex=\&quot;1\&quot;&gt;\n          &lt;mxGeometry x=\&quot;25.930000000000064\&quot; y=\&quot;130\&quot; width=\&quot;60.98\&quot; height=\&quot;50\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n        &lt;mxCell id=\&quot;xq37qWWrgBNqL2LhlARQ-4\&quot; style=\&quot;edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;\&quot; edge=\&quot;1\&quot; parent=\&quot;1\&quot; source=\&quot;-5nR3zmqGwLBVs8ZNcRx-41\&quot; target=\&quot;-5nR3zmqGwLBVs8ZNcRx-49\&quot;&gt;\n          &lt;mxGeometry relative=\&quot;1\&quot; as=\&quot;geometry\&quot; /&gt;\n        &lt;/mxCell&gt;\n      &lt;/root&gt;\n    &lt;/mxGraphModel&gt;\n  &lt;/diagram&gt;\n&lt;/mxfile&gt;\n&quot;}"></div>
+<script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script>
+</body>
+</html><p>Each service is built and published on GitHub via a CI/CD pipeline as a Docker container.
+These containers are stored in GitHub Packages Registry and can be accessed
+<a class="reference external" href="https://github.com/fhswf-study-projects">HERE</a>. The Compose-Stack is responsible for deploying all
+services onto the server, ensuring a fully functional MLOps pipeline. Each service is containerized
+using Docker and orchestrated using Docker Compose, simplifying deployment and scaling.</p>
+<p>The system is divided into multiple services, each managed in a separate GitHub repository.
+Below is an overview of the repositories and their responsibilities:</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 27.3%" />
+<col style="width: 45.5%" />
+<col style="width: 27.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Repository</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Link</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Organization</strong></p></td>
+<td><p>The organization site. Included all repositories for this project.</p></td>
+<td><p><a class="reference external" href="https://github.com/fhswf-study-projects">Repository</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>mlops-data-processor</strong></p></td>
+<td><p>Core service responsible for data validation, preprocessing, and model inference.</p></td>
+<td><p><a class="reference external" href="https://github.com/fhswf-study-projects/mlops-data-processor">Repository</a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>mlops-streamlit-ui</strong></p></td>
+<td><p>Frontend interface for user interaction and predictions.</p></td>
+<td><p><a class="reference external" href="https://github.com/fhswf-study-projects/mlops-streamlit-ui">Repository</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>mlops-pipeline-api</strong></p></td>
+<td><p>Backend API that receives user inputs and interacts with the data processor.</p></td>
+<td><p><a class="reference external" href="https://github.com/fhswf-study-projects/mlops-pipeline-api">Repository</a></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>docker-container-template</strong></p></td>
+<td><p>A template for new services.</p></td>
+<td><p><a class="reference external" href="https://github.com/fhswf-study-projects/docker-container-template">Repository</a></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>mlops-compose-stack</strong></p></td>
+<td><p>Deployment Stack, to bring all services together and deploy them (include LGTM, MinIO …).</p></td>
+<td><p><a class="reference external" href="https://github.com/fhswf-study-projects/mlops-compose-stack">Repository</a></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="detailed-breakdown-of-components">
+<h2>5.2 Detailed Breakdown of Components<a class="headerlink" href="#detailed-breakdown-of-components" title="Link to this heading"></a></h2>
+<p>Each service is managed in its own repository and interacts with others as follows:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Frontend (streamlit-ui)</dt><dd><ul>
+<li><p>Calls FastAPI Backend requests predictions.</p></li>
+<li><p>User can also give a feedback, if the prediction was True or False.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Backend (fast-api):</dt><dd><ul>
+<li><p>Sends user input to Data-Processor and receives predictions.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Backend (data-processor):</dt><dd><ul>
+<li><p>Uses a trained model to make predictions and fetches versioned data.</p></li>
+<li><p>Also possible to trigger a new training-process, if the score falls below a specific threshold.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Stack (compose-stack):</dt><dd><ul>
+<li><p>Uses CD pipelines to run and update different services.</p></li>
+<li><p>Automated Documentation is implemented here as well.</p></li>
+<li><p>There is a staging and a main service integration, where main is what user sees and staging is
+for testing new updates.</p></li>
+<li><p>The includes all services, also LGTM-Stack (Loki, Grafana, Tempo and Mimir)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="solution_strategy.html" class="btn btn-neutral float-left" title="4. Solution Strategy" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="runtime_view.html" class="btn btn-neutral float-right" title="6. Runtime View" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
