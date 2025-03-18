@@ -43,6 +43,7 @@ jobs:
           cd docs
           rm -rf _build
           rm -rf _static/notebooks
+          mkdir -p _static/notebooks
           cp -r ../repos/mlops-data-processor/notebooks/* _static/notebooks
           python convert_ipynb_to_html
           sphinx-apidoc -o streamlit-ui -H Streamlit-UI ../repos/mlops-streamlit-ui/app
