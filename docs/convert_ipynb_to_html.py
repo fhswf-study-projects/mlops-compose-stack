@@ -9,7 +9,8 @@ try:
 
         body, _ = exporter.from_filename(f"_static\\notebooks\\{notebook}")
 
-        with open(f"_static\\notebooks\\{notebook.replace(".ipynb", ".html")}", "w", encoding="utf-8") as f:
+        new_nb_name = notebook.replace(".ipynb", ".html")
+        with open(f"_static\\notebooks\\{new_nb_name}", "w", encoding="utf-8") as f:
             f.write(body)
 except:
     logging.warning("FAILED TO DOCUMENT NOTEBOOKS")
