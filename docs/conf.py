@@ -40,7 +40,6 @@ author = ""
 # The full version, including alpha/beta/rc tags
 release = ""
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -90,6 +89,7 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css". Test
 html_static_path = ["_static"]
+html_css_files = ['css/hacks.css']
 
 
 def skip(app, what, name, obj, would_skip, options):
@@ -100,4 +100,4 @@ def skip(app, what, name, obj, would_skip, options):
 
 def setup(app):
     app.connect("autodoc-skip-member", skip)
-    app.add_css_file("my_theme.css")
+    app.add_css_file("css/my_theme.css")

@@ -1,6 +1,7 @@
 .. MLOPS documentation master file, created by
    sphinx-quickstart on Fri Mar 14 17:34:51 2025.
 
+.. include:: .special.rst
 
 MLOPS documentation
 ===================
@@ -10,9 +11,9 @@ MLOPS documentation
    :caption: Architecture-Overview:
 
    arc
-   services
 
 .. toctree::
    :caption: Services:
 
+   services
 
