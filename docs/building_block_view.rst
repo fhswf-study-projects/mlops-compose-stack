@@ -10,7 +10,7 @@
 
 Each service is built and published on GitHub via a CI/CD pipeline as a Docker container.
 These containers are stored in GitHub Packages Registry and can be accessed
-`HERE <https://github.com/fhswf-study-projects>`_. The Compose-Stack is responsible for deploying all
+`HERE <https://github.com/orgs/fhswf-study-projects/packages>`_. The Compose-Stack is responsible for deploying all
 services onto the server, ensuring a fully functional MLOps pipeline. Each service is containerized
 using Docker and orchestrated using Docker Compose, simplifying deployment and scaling.
 

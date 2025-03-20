@@ -13,7 +13,7 @@ an small overview.
 
 - MLOPs-Project is a study project for "Fachhochschule Südwestfalen" to learn the concepts of MLOPs.
 - Uses  `Adult-Income-Dataset  <https://www.kaggle.com/datasets/wenruliu/adult-income-dataset/data>`_
-  within the MLOPs-Pipeline. The target is to make prediction for income (>50.000$/a or <50.000$&/a). So
+  within the MLOPs-Pipeline. The target is to make prediction for income (>50.000$/a or <50.000$/a). So
   a solution for a binary classification problem.
 - The goal is to create a End-to-End MLOPs solution, using best practices.
 
@@ -47,7 +47,7 @@ an small overview.
    * - Quality Target
      - Motivation and Description
    * - **Maintainability**
-     - The pipeline should be modular and well-documented to allow easy modifications and extensions.
+     - The pipeline should be modular and well-documented to allow easy modifications and extensions (arc42 comes in place here :)).
    * - **Reproducibility**
      - The entire ML workflow, from data ingestion to model deployment, should be reproducible using version-controlled code and Docker containers.
    * - **Automation**
