@@ -15,7 +15,7 @@ These concepts ensure security, maintainability, scalability, and consistency ac
 - All public-facing services (FastAPI, Streamlit UI, MinIO, MLflow, Grafana) are secured using SSL/TLS encryption.
 - Nginx Proxy acts as a reverse proxy and handles TLS termination using Let's Encrypt certificates.
 - Ensures end-to-end encrypted communication between users and backend services.
-- Fast-API is needs a Token-based authentication via API key.
+- Fast-API got a Token-based authentication via API key.
 
 =================================
 8.2 Observability and Monitoring
