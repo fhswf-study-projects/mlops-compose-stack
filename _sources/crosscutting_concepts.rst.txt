@@ -4,12 +4,16 @@
 This section describes all essential and interconnected concepts that influence multiple aspects of the system.
 These concepts ensure security, maintainability, scalability, and consistency across the architecture.
 
+
+.. raw:: html
+   :file: _images/crosscutting_concepts.html
+
 =================================
 8.1 Security and Authentication
 =================================
 
 - All public-facing services (FastAPI, Streamlit UI, MinIO, MLflow, Grafana) are secured using SSL/TLS encryption.
-- Nginx Proxy acts as a reverse proxy and handles TLS termination using Let's Encrypt certificates (via Acme Companion).
+- Nginx Proxy acts as a reverse proxy and handles TLS termination using Let's Encrypt certificates.
 - Ensures end-to-end encrypted communication between users and backend services.
 - Fast-API is needs a Token-based authentication via API key.
 

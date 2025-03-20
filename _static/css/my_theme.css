@@ -2,8 +2,6 @@
     max-width: 1200px !important;
 }
 
-
-
 details {
 margin: 10px 0;
 padding: 10px;
@@ -39,3 +37,5 @@ margin-top: 10px;
 border-radius: 5px;
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
+
