@@ -2,6 +2,27 @@ services:
   nginx-proxy:
     restart: always
     container_name: nginx-proxy
+    deploy:
+      restart_policy:
+       condition: on-failure
+       delay: 5s
+       max_attempts: 3
+       window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: "100M"
+        reservations:
+          cpus: "0.05"
+          memory: "20M"
     profiles: [ "techstack" ]
     ports:
       - "443:443"
@@ -12,6 +33,27 @@ services:
   acme-companion:
     restart: always
     image: nginxproxy/acme-companion:${ACME_COMPANION_VERSION_TAG}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.20"
+          memory: "100M"
+        reservations:
+          cpus: "0.05"
+          memory: "20M"
     container_name: nginx-proxy-acme
     profiles: [ "techstack" ]
     environment:
@@ -25,6 +67,24 @@ services:
 
   rabbitmq:
     restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.30"
+          memory: "256M"
     profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${RABBITMQ_VIRTUAL_HOST}
@@ -43,6 +103,24 @@ services:
 
   postgres:
     restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "256M"
     profiles: [ "techstack" ]
     environment:
       - POSTGRES_USER=${PG_USER}
@@ -68,6 +146,24 @@ services:
   s3:
     restart: always
     image: minio/minio:${MINIO_VERSION_TAG}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: "256M"
     profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${S3_VIRTUAL_HOST}
@@ -88,6 +184,14 @@ services:
   mlflow-server:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlflow-server:latest
+    deploy:
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "1.00"
     profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${MLFLOW_VIRTUAL_HOST}
@@ -103,6 +207,23 @@ services:
   otel-lgtm:
     restart: always
     image: grafana/otel-lgtm:${OTEL_VERSION_TAG}
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "1.25"
     profiles: [ "techstack" ]
     environment:
       - VIRTUAL_HOST=${OTEL_VIRTUAL_HOST}
@@ -129,6 +250,29 @@ services:
   pipeline-api:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-pipeline-api:${DEPLOY_ENV}
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "256M"
+        reservations:
+          cpus: "0.20"
+          memory: "40M"
     profiles: [ "services" ]
     environment:
       - VIRTUAL_HOST=${FASTAPI_VIRTUAL_HOST}
@@ -152,6 +296,29 @@ services:
   streamlit-ui:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-streamlit-ui:${DEPLOY_ENV}
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "0.50"
+          memory: "128M"
+        reservations:
+          cpus: "0.20"
+          memory: "40M"
     profiles: [ "services" ]
     environment:
       - VIRTUAL_HOST=${STREAMLIT_VIRTUAL_HOST}
@@ -169,6 +336,25 @@ services:
   data-processor:
     restart: always
     image: ghcr.io/fhswf-study-projects/mlops-data-processor:${DEPLOY_ENV}
+    deploy:
+      mode: replicated
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 20s
+        max_attempts: 3
+        window: 120s
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      rollback_config:
+        parallelism: 2
+        delay: 10s
+        order: stop-first
+      resources:
+        limits:
+          cpus: "1.50"
     profiles: [ "services" ]
     environment:
       - C_FORCE_ROOT=false
