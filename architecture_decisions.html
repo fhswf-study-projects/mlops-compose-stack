@@ -1,0 +1,282 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>9. Architecture Decisions &mdash; FH-SWF MLOPS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/my_theme.css?v=8df07bdd" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="10. Quality Requirements" href="quality.html" />
+    <link rel="prev" title="8. Crosscutting Concepts" href="crosscutting_concepts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: black" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FH-SWF MLOPS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction and Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">2. Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context_and_scope.html">3. Context and Scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solution_strategy.html">4. Solution Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_block_view.html">5. Building Block View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runtime_view.html">6. Runtime View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html">7. Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="crosscutting_concepts.html">8. Crosscutting Concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">9. Architecture Decisions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#fastapi-for-backend-services">9.1 FastAPI for Backend Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment-strategy-docker">9.2 Deployment Strategy: Docker</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#database-choice-postgresql">9.3 Database Choice: PostgreSQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#storage-minio-as-s3-compatible-object-store">9.4 Storage: MinIO as S3-Compatible Object Store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#monitoring-logging-prometheus-grafana-loki">9.5 Monitoring &amp; Logging: Prometheus + Grafana + Loki</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ci-cd-strategy-github-actions-for-automation">9.5 CI/CD Strategy: GitHub Actions for Automation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api-gateway-reverse-proxy-nginx">9.6 API Gateway &amp; Reverse Proxy: Nginx</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">10. Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">12. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: black" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FH-SWF MLOPS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">9. Architecture Decisions</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/architecture_decisions.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="architecture-decisions">
+<h1>9. Architecture Decisions<a class="headerlink" href="#architecture-decisions" title="Link to this heading"></a></h1>
+<p>This chapter documents key architectural decisions made during the design and implementation of the
+system.</p>
+<p>Each decision follows a structured format to capture important details:</p>
+<div class="line-block">
+<div class="line"><strong>Title</strong> – A short, descriptive name for the decision.</div>
+<div class="line"><strong>Context</strong> – The problem, background, and reasoning for the decision.</div>
+<div class="line"><strong>Decision</strong> – The chosen solution and justification.</div>
+<div class="line"><strong>Consequences</strong> – The impact of the decision, including trade-offs and alternatives considered.</div>
+</div>
+<section id="fastapi-for-backend-services">
+<h2>9.1 FastAPI for Backend Services<a class="headerlink" href="#fastapi-for-backend-services" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> FastAPI for Backend Services</div>
+<div class="line"><strong>Context</strong>: The backend requires a high-performance, async-first API framework for
+handling machine learning workloads.</div>
+<div class="line"><strong>Decision:</strong> We selected FastAPI due to its automatic OpenAPI documentation, async support,
+and performance optimizations.</div>
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Faster response times with async I/O</p></li>
+<li><p>Built-in validation via Pydantic</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>Requires developer familiarity with async paradigms</p></li>
+</ul>
+</section>
+<section id="deployment-strategy-docker">
+<h2>9.2 Deployment Strategy: Docker<a class="headerlink" href="#deployment-strategy-docker" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> Deployment Strategy: Docker</div>
+<div class="line"><strong>Context</strong>: The system needs a scalable, containerized deployment approach
+that supports multi-environment staging and production.</div>
+<div class="line"><strong>Decision:</strong> We use Docker for containerization for orchestration, ensuring portability and scalability.</div>
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Simplified dependency management with Docker</p></li>
+<li><p>Easier Deployment (independent services)</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>More complexity</p></li>
+</ul>
+</section>
+<section id="database-choice-postgresql">
+<h2>9.3 Database Choice: PostgreSQL<a class="headerlink" href="#database-choice-postgresql" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> Database Choice: PostgreSQL</div>
+<div class="line"><strong>Context</strong>: The system requires a reliable, ACID-compliant database to store structured data.</div>
+<div class="line"><strong>Decision:</strong> We chose PostgreSQL due to its robust transactions, scalability, and strong SQL support.</div>
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Supports advanced queries and analytics</p></li>
+<li><p>Open-source with strong community support</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>Requires tuning for large-scale ML workloads</p></li>
+</ul>
+</section>
+<section id="storage-minio-as-s3-compatible-object-store">
+<h2>9.4 Storage: MinIO as S3-Compatible Object Store<a class="headerlink" href="#storage-minio-as-s3-compatible-object-store" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> Storage: MinIO as S3-Compatible Object Store</div>
+<div class="line"><strong>Context</strong>: Machine learning workflows need a scalable, durable storage solution for datasets.</div>
+<div class="line"><strong>Decision:</strong> We use MinIO, an S3-compatible storage service, for fast, distributed object storage.</div>
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Works seamlessly with MLflow for model tracking</p></li>
+<li><p>Scalable and deployable on-premise</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>Requires additional backup strategies for data persistence</p></li>
+</ul>
+</section>
+<section id="monitoring-logging-prometheus-grafana-loki">
+<h2>9.5 Monitoring &amp; Logging: Prometheus + Grafana + Loki<a class="headerlink" href="#monitoring-logging-prometheus-grafana-loki" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> Monitoring &amp; Logging: Prometheus + Grafana + Loki</div>
+<div class="line"><strong>Context</strong>: The system requires comprehensive observability to detect failures and monitor performance.</div>
+<div class="line"><strong>Decision:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Prometheus for metrics collection</p></li>
+<li><p>Grafana for visualization</p></li>
+<li><p>Loki for centralized logging</p></li>
+</ul>
+<div class="line-block">
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Unified monitoring stack improves debugging</p></li>
+<li><p>Customizable dashboards for system health</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>Additional infrastructure overhead</p></li>
+</ul>
+</section>
+<section id="ci-cd-strategy-github-actions-for-automation">
+<h2>9.5 CI/CD Strategy: GitHub Actions for Automation<a class="headerlink" href="#ci-cd-strategy-github-actions-for-automation" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> CI/CD Strategy: GitHub Actions for Automation</div>
+<div class="line"><strong>Context</strong>: Automated testing, building, and deployment are required for continuous integration and delivery.</div>
+<div class="line"><strong>Decision:</strong> We use GitHub Actions for automating tests, builds, and deployments.</div>
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Faster release cycles with automated testing</p></li>
+<li><p>Seamless Git-based workflow integration</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>Requires maintaining workflow configurations</p></li>
+</ul>
+</section>
+<section id="api-gateway-reverse-proxy-nginx">
+<h2>9.6 API Gateway &amp; Reverse Proxy: Nginx<a class="headerlink" href="#api-gateway-reverse-proxy-nginx" title="Link to this heading"></a></h2>
+<div class="line-block">
+<div class="line"><strong>Title:</strong> API Gateway &amp; Reverse Proxy: Nginx</div>
+<div class="line"><strong>Context</strong>: We need a secure entry point for incoming requests and SSL termination for public services.</div>
+<div class="line"><strong>Decision:</strong> Nginx is used as a reverse proxy and load balancer.</div>
+<div class="line"><strong>Consequences:</strong></div>
+</div>
+<ul class="simple">
+<li><p>Positive effect</p></li>
+<li><p>Improved security with rate limiting and DDoS protection</p></li>
+<li><p>Load balancing across backend services</p></li>
+</ul>
+<ul class="simple">
+<li><p>Negative effect</p></li>
+<li><p>Requires ongoing configuration updates</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="crosscutting_concepts.html" class="btn btn-neutral float-left" title="8. Crosscutting Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="quality.html" class="btn btn-neutral float-right" title="10. Quality Requirements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

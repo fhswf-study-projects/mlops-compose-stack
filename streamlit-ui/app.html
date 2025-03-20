@@ -47,22 +47,19 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">1. Introduction and Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../constraints.html">2. Constraints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../context_and_scope.html">3. Context and Scope</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../solution_strategy.html">4. Solution Strategy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../building_block_view.html">5. Building Block View</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../runtime_view.html">6. Runtime View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html">Deployment View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#crosscutting-concepts">Crosscutting Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#architecture-decisions">Architecture Decisions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#quality-requirements">Quality Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#risks-and-technical-debt">Risks and Technical Debt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html#glossary">Glossary</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Services:</span></p>
-<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../deployment_view.html">7. Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../crosscutting_concepts.html">8. Crosscutting Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../architecture_decisions.html">9. Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../quality.html">10. Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">12. Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../data-processor/modules.html">Data-Processor</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">Streamlit-UI</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">app package</a><ul>
@@ -149,21 +146,6 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt class="sig sig-object py" id="app.constants.EnvConfig.OTEL_EXPORTER_OTLP_ENDPOINT">
-<span class="sig-name descname"><span class="pre">OTEL_EXPORTER_OTLP_ENDPOINT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OTEL_EXPORTER_OTLP_ENDPOINT'</span></em><a class="headerlink" href="#app.constants.EnvConfig.OTEL_EXPORTER_OTLP_ENDPOINT" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="app.constants.EnvConfig.OTEL_LOG_LEVEL">
-<span class="sig-name descname"><span class="pre">OTEL_LOG_LEVEL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OTEL_LOG_LEVEL'</span></em><a class="headerlink" href="#app.constants.EnvConfig.OTEL_LOG_LEVEL" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="app.constants.EnvConfig.OTEL_SERVICE_NAME">
-<span class="sig-name descname"><span class="pre">OTEL_SERVICE_NAME</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'OTEL_SERVICE_NAME'</span></em><a class="headerlink" href="#app.constants.EnvConfig.OTEL_SERVICE_NAME" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt class="sig sig-object py" id="app.constants.EnvConfig.PORT">
 <span class="sig-name descname"><span class="pre">PORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'VIRTUAL_PORT'</span></em><a class="headerlink" href="#app.constants.EnvConfig.PORT" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -196,6 +178,7 @@
 </section>
 <section id="module-app.schemas">
 <span id="app-schemas-module"></span><h2>app.schemas module<a class="headerlink" href="#module-app.schemas" title="Link to this heading"></a></h2>
+<p>Define all needed Request/Response endpoints schemas here.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="app.schemas.AsyncTaskResponse">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">AsyncTaskResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/app/schemas.html#AsyncTaskResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#app.schemas.AsyncTaskResponse" title="Link to this definition"></a></dt>

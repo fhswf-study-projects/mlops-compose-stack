@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>8. Crosscutting Concepts &mdash; FH-SWF MLOPS  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="_static/my_theme.css?v=8df07bdd" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="9. Architecture Decisions" href="architecture_decisions.html" />
+    <link rel="prev" title="7. Deployment View" href="deployment_view.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: black" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            FH-SWF MLOPS
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction and Goals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="constraints.html">2. Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="context_and_scope.html">3. Context and Scope</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solution_strategy.html">4. Solution Strategy</a></li>
+<li class="toctree-l1"><a class="reference internal" href="building_block_view.html">5. Building Block View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="runtime_view.html">6. Runtime View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="deployment_view.html">7. Deployment View</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">8. Crosscutting Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#security-and-authentication">8.1 Security and Authentication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#observability-and-monitoring">8.2 Observability and Monitoring</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#logging-and-tracing">8.3 Logging and Tracing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-management">8.4 Configuration Management</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scalability-and-resilience">8.5 Scalability and Resilience</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#continuous-integration-and-deployment-ci-cd">8.6 Continuous Integration and Deployment (CI/CD)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#data-versioning-and-management">8.7  Data Versioning and Management</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture_decisions.html">9. Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">10. Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">12. Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu"  style="background: black" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">FH-SWF MLOPS</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">8. Crosscutting Concepts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/crosscutting_concepts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="crosscutting-concepts">
+<h1>8. Crosscutting Concepts<a class="headerlink" href="#crosscutting-concepts" title="Link to this heading"></a></h1>
+<p>This section describes all essential and interconnected concepts that influence multiple aspects of the system.
+These concepts ensure security, maintainability, scalability, and consistency across the architecture.</p>
+<section id="security-and-authentication">
+<h2>8.1 Security and Authentication<a class="headerlink" href="#security-and-authentication" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>All public-facing services (FastAPI, Streamlit UI, MinIO, MLflow, Grafana) are secured using SSL/TLS encryption.</p></li>
+<li><p>Nginx Proxy acts as a reverse proxy and handles TLS termination using Let’s Encrypt certificates (via Acme Companion).</p></li>
+<li><p>Ensures end-to-end encrypted communication between users and backend services.</p></li>
+<li><p>Fast-API is needs a Token-based authentication via API key.</p></li>
+</ul>
+</section>
+<section id="observability-and-monitoring">
+<h2>8.2 Observability and Monitoring<a class="headerlink" href="#observability-and-monitoring" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Prometheus collects system metrics like CPU, memory, response times, and database performance.</p></li>
+<li><p>Grafana Dashboards visualize real-time system health and ML model performance.</p></li>
+<li><p>Each service (PostgreSQL, RabbitMQ, MinIO, MLflow, API) has health check endpoints, which is also monitored.</p></li>
+<li><p>If a service becomes unhealthy, alerts are triggered via Prometheus Alertmanager.</p></li>
+<li><p>Loki stores centralized logs, reducing the need for individual service log files.</p></li>
+<li><p>Structured logging (JSON format) allows easy searching and filtering.</p></li>
+<li><p>Tempo traces API calls, tracking latency bottlenecks across services.</p></li>
+</ul>
+</section>
+<section id="logging-and-tracing">
+<h2>8.3 Logging and Tracing<a class="headerlink" href="#logging-and-tracing" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Loki aggregates logs from FastAPI, Streamlit UI, and Data Processor.</p></li>
+<li><p>Logs are stored persistently and queried and visualized via Grafana.</p></li>
+<li><p>Each request receives a unique trace ID, linking logs across services.</p></li>
+<li><p>Helps detect slow API responses and identify failures.</p></li>
+</ul>
+</section>
+<section id="configuration-management">
+<h2>8.4 Configuration Management<a class="headerlink" href="#configuration-management" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Docker Compose and .env files manage secrets and configuration.</p></li>
+<li><p>Prevents hardcoding sensitive information (e.g., API keys, DB passwords).</p></li>
+<li><p>Services communicate using Docker internal DNS (rabbitmq, postgres, s3).</p></li>
+<li><p>No hardcoded IP addresses, ensuring flexible deployments.</p></li>
+<li><p>GitHub secrets to manage sensitive information (e.g., password, API keys).</p></li>
+</ul>
+</section>
+<section id="scalability-and-resilience">
+<h2>8.5 Scalability and Resilience<a class="headerlink" href="#scalability-and-resilience" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Asynchronous processing via RabbitMQ prevents blocking API requests.</p></li>
+<li><p>Retry mechanisms in place to handle transient failures.</p></li>
+<li><p>API services, Streamlit UI, and Data Processor can scale independently.</p></li>
+<li><p>Load balancing via Nginx Proxy distributes traffic evenly.</p></li>
+<li><p>Database services have automatic reconnection logic.</p></li>
+<li><p>MinIO supports replication to prevent data loss.</p></li>
+</ul>
+</section>
+<section id="continuous-integration-and-deployment-ci-cd">
+<h2>8.6 Continuous Integration and Deployment (CI/CD)<a class="headerlink" href="#continuous-integration-and-deployment-ci-cd" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>GitHub Actions CI/CD automates build, test, and deployment workflows.</p></li>
+<li><p>Unit tests, integration tests, and API tests ensure stability.</p></li>
+<li><p>Automated documentation</p></li>
+</ul>
+</section>
+<section id="data-versioning-and-management">
+<h2>8.7  Data Versioning and Management<a class="headerlink" href="#data-versioning-and-management" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>MLflow tracks and manages model versions, ensuring reproducibility.</p></li>
+<li><p>New models are automatically logged, compared, and deployed.</p></li>
+<li><p>MinIO (S3-compatible storage) stores datasets, logs, and model artifacts.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="deployment_view.html" class="btn btn-neutral float-left" title="7. Deployment View" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="architecture_decisions.html" class="btn btn-neutral float-right" title="9. Architecture Decisions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

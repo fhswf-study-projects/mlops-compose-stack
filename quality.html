@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; FH-SWF MLOPS  documentation</title>
+  <title>10. Quality Requirements &mdash; FH-SWF MLOPS  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Data-Processor" href="data-processor/modules.html" />
-    <link rel="prev" title="12. Glossary" href="glossary.html" /> 
+    <link rel="next" title="11. Risks and Technical Debt" href="risks_and_technical_debt.html" />
+    <link rel="prev" title="9. Architecture Decisions" href="architecture_decisions.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,7 +47,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction and Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="constraints.html">2. Constraints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="context_and_scope.html">3. Context and Scope</a></li>
@@ -57,7 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="deployment_view.html">7. Deployment View</a></li>
 <li class="toctree-l1"><a class="reference internal" href="crosscutting_concepts.html">8. Crosscutting Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture_decisions.html">9. Architecture Decisions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quality.html">10. Quality Requirements</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">10. Quality Requirements</a></li>
 <li class="toctree-l1"><a class="reference internal" href="risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">12. Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
@@ -79,9 +79,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">&lt;no title&gt;</li>
+          <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">10. Quality Requirements</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/services.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/quality.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,40 +90,64 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Data-Procssor</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data-processor/app.html">app package</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Streamlit-UI</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="streamlit-ui/app.html">app package</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Pipeline-API</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline-api/app.html">app package</a></li>
-</ul>
-</li>
-</ul>
-</div>
+  <section id="quality-requirements">
+<h1>10. Quality Requirements<a class="headerlink" href="#quality-requirements" title="Link to this heading"></a></h1>
+<p>This chapter defines the quality attributes that the system must meet.
+These requirements ensure the system is reliable, maintainable, performant,
+and secure, supporting both University and technical needs.
+There are now concrete quality requirements for this project.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Quality Attributes</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 66.7%" />
+<col style="width: 16.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Quality Attribute</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+<th class="head"><p><strong>Priority (High, Medium, Low)</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Performance</p></td>
+<td><p>The system must handle high-concurrency workloads and provide fast response times.</p></td>
+<td><p>High</p></td>
+</tr>
+<tr class="row-odd"><td><p>Scalability</p></td>
+<td><p>The architecture must scale horizontally and vertically to support growing workloads.</p></td>
+<td><p>High</p></td>
+</tr>
+<tr class="row-even"><td><p>Availability</p></td>
+<td><p>The system should have high uptime, minimizing service disruptions.</p></td>
+<td><p>High</p></td>
+</tr>
+<tr class="row-odd"><td><p>Security</p></td>
+<td><p>Data access must be controlled and encrypted.</p></td>
+<td><p>High</p></td>
+</tr>
+<tr class="row-even"><td><p>Maintainability</p></td>
+<td><p>The system must support continuous integration and automated deployments for easy updates.</p></td>
+<td><p>Medium</p></td>
+</tr>
+<tr class="row-odd"><td><p>Observability</p></td>
+<td><p>Logs, metrics, and traces must be collected for real-time monitoring and debugging.</p></td>
+<td><p>Medium</p></td>
+</tr>
+<tr class="row-even"><td><p>Usability</p></td>
+<td><p>The user-facing components (Streamlit UI, API) should be intuitive and easy to use.</p></td>
+<td><p>Medium</p></td>
+</tr>
+</tbody>
+</table>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="glossary.html" class="btn btn-neutral float-left" title="12. Glossary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="data-processor/modules.html" class="btn btn-neutral float-right" title="Data-Processor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="architecture_decisions.html" class="btn btn-neutral float-left" title="9. Architecture Decisions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="risks_and_technical_debt.html" class="btn btn-neutral float-right" title="11. Risks and Technical Debt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

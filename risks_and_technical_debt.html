@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; FH-SWF MLOPS  documentation</title>
+  <title>11. Risks and Technical Debt &mdash; FH-SWF MLOPS  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -23,8 +23,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Data-Processor" href="data-processor/modules.html" />
-    <link rel="prev" title="12. Glossary" href="glossary.html" /> 
+    <link rel="next" title="12. Glossary" href="glossary.html" />
+    <link rel="prev" title="10. Quality Requirements" href="quality.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,7 +47,7 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Architecture-Overview:</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">1. Introduction and Goals</a></li>
 <li class="toctree-l1"><a class="reference internal" href="constraints.html">2. Constraints</a></li>
 <li class="toctree-l1"><a class="reference internal" href="context_and_scope.html">3. Context and Scope</a></li>
@@ -58,7 +58,11 @@
 <li class="toctree-l1"><a class="reference internal" href="crosscutting_concepts.html">8. Crosscutting Concepts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture_decisions.html">9. Architecture Decisions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quality.html">10. Quality Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">11. Risks and Technical Debt</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#risks">11.1 Risks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#technical-debt">11.2 Technical Debt</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">12. Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a></li>
@@ -79,9 +83,10 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">&lt;no title&gt;</li>
+          <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
+      <li class="breadcrumb-item active">11. Risks and Technical Debt</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/services.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/risks_and_technical_debt.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -89,40 +94,42 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Data-Procssor</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="data-processor/app.html">app package</a></li>
+  <section id="risks-and-technical-debt">
+<h1>11. Risks and Technical Debt<a class="headerlink" href="#risks-and-technical-debt" title="Link to this heading"></a></h1>
+<p>This section describes Risks and technical debts of this project.</p>
+<section id="risks">
+<h2>11.1 Risks<a class="headerlink" href="#risks" title="Link to this heading"></a></h2>
+<p>Potential challenges that could impact system reliability, security, or performance.</p>
+<ul class="simple">
+<li><p>Infrastructure Downtime – Service disruptions due to server failures or misconfigurations.</p></li>
+<li><p>Scalability Bottlenecks – System may struggle to handle increased load without optimized scaling.</p></li>
+<li><p>Security Vulnerabilities – Risk of data breaches if access control and encryption are misconfigured.</p></li>
+<li><p>Data Consistency Issues – Risk of inconsistencies due to distributed storage and processing.</p></li>
+<li><p>Dependency Management – Outdated or unsupported dependencies could lead to security risks.</p></li>
+<li><p>Monitoring and Alerts – Inadequate observability may delay issue detection and resolution.</p></li>
+<li><p>Regulatory Compliance – Failure to comply with GDPR or other regulations may lead to penalties.</p></li>
 </ul>
-</li>
+</section>
+<section id="technical-debt">
+<h2>11.2 Technical Debt<a class="headerlink" href="#technical-debt" title="Link to this heading"></a></h2>
+<p>Areas where quick solutions may lead to long-term maintenance challenges.</p>
+<ul class="simple">
+<li><p>Hardcoded Configurations – Some services may have environment variables hardcoded, reducing flexibility.</p></li>
+<li><p>Manual Deployment Steps – Certain updates may still require manual intervention instead of full automation.</p></li>
+<li><p>Components – Some components are tightly coupled, limiting modularity and scalability.</p></li>
+<li><p>Incomplete Test Coverage – Automated testing is not yet comprehensive, increasing the risk of undetected bugs.</p></li>
+<li><p>Performance Inefficiencies – Certain queries or processing steps are not optimized, affecting response times.</p></li>
+<li><p>Lack of Documentation – Some internal processes and API endpoints lack proper documentation, slowing onboarding.</p></li>
 </ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Streamlit-UI</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="streamlit-ui/app.html">app package</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Pipeline-API</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline-api/app.html">app package</a></li>
-</ul>
-</li>
-</ul>
-</div>
+</section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="glossary.html" class="btn btn-neutral float-left" title="12. Glossary" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="data-processor/modules.html" class="btn btn-neutral float-right" title="Data-Processor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quality.html" class="btn btn-neutral float-left" title="10. Quality Requirements" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="glossary.html" class="btn btn-neutral float-right" title="12. Glossary" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

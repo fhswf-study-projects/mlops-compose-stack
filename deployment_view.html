@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Deployment View &mdash; FH-SWF MLOPS  documentation</title>
+  <title>7. Deployment View &mdash; FH-SWF MLOPS  documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -20,10 +20,18 @@
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="_static/copybutton.js?v=f281be69"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="services.html" />
+    <link rel="next" title="8. Crosscutting Concepts" href="crosscutting_concepts.html" />
     <link rel="prev" title="6. Runtime View" href="runtime_view.html" /> 
 </head>
 
@@ -54,15 +62,19 @@
 <li class="toctree-l1"><a class="reference internal" href="solution_strategy.html">4. Solution Strategy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="building_block_view.html">5. Building Block View</a></li>
 <li class="toctree-l1"><a class="reference internal" href="runtime_view.html">6. Runtime View</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Deployment View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#crosscutting-concepts">Crosscutting Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#architecture-decisions">Architecture Decisions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#quality-requirements">Quality Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#risks-and-technical-debt">Risks and Technical Debt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#glossary">Glossary</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">7. Deployment View</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#infrastructure-overview">7.1 Infrastructure Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment-diagram">7.2 Deployment Diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#network-and-hosting-details">7.3 Network and Hosting Details</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deployment-process">7.4 Deployment Process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scaling-and-future-improvements">7.5 Scaling and Future Improvements</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Services:</span></p>
-<ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="crosscutting_concepts.html">8. Crosscutting Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture_decisions.html">9. Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quality.html">10. Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">12. Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="data-processor/modules.html">Data-Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="streamlit-ui/modules.html">Streamlit-UI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pipeline-api/modules.html">Pipeline-API</a></li>
@@ -83,7 +95,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="arc.html">&lt;no title&gt;</a></li>
-      <li class="breadcrumb-item active">Deployment View</li>
+      <li class="breadcrumb-item active">7. Deployment View</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/deployment_view.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -94,22 +106,165 @@
            <div itemprop="articleBody">
              
   <section id="deployment-view">
-<h1>Deployment View<a class="headerlink" href="#deployment-view" title="Link to this heading"></a></h1>
+<h1>7. Deployment View<a class="headerlink" href="#deployment-view" title="Link to this heading"></a></h1>
+<section id="infrastructure-overview">
+<h2>7.1 Infrastructure Overview<a class="headerlink" href="#infrastructure-overview" title="Link to this heading"></a></h2>
+<p>The system is deployed on a self-hosted server using Docker Compose. Services are organized into different profiles:</p>
+<ul class="simple">
+<li><p><strong>Tech Stack:</strong> Core infrastructure services (Nginx, RabbitMQ, PostgreSQL, MinIO, MLflow, Prometheus, Loki, Tempo, Mimir, Grafana).</p></li>
+<li><p><strong>Application Services</strong>: Streamlit UI, FastAPI Backend (Pipeline API), Data Processor.</p></li>
+</ul>
+<p>The server runs all containers in an isolated Docker network, exposing only necessary ports through an Nginx reverse proxy
+with automated Let’s Encrypt SSL certificates.</p>
 </section>
-<section id="crosscutting-concepts">
-<h1>Crosscutting Concepts<a class="headerlink" href="#crosscutting-concepts" title="Link to this heading"></a></h1>
+<section id="deployment-diagram">
+<h2>7.2 Deployment Diagram<a class="headerlink" href="#deployment-diagram" title="Link to this heading"></a></h2>
+<pre  class="mermaid">
+        graph TD
+    subgraph Self-Hosted Server
+        subgraph Docker Network
+            subgraph Reverse Proxy
+                Nginx[Nginx Proxy] --&gt;|SSL Certificates| Acme[Acme Companion]
+            end
+
+            subgraph Core Services
+                DB[PostgreSQL]
+                MQ[RabbitMQ]
+                S3[MinIO]
+                MLflow[MLflow Server]
+                Logs[Prometheus + Loki + Tempo + Mimir] --&gt; Grafana[Grafana]
+            end
+
+            subgraph Application Services
+                UI[Streamlit UI] --&gt;|API Calls| API[FastAPI Backend]
+                API --&gt;|Model Requests| DP[Data Processor]
+                DP --&gt;|Fetch Model| MLflow
+                DP --&gt;|Store Data| S3
+                API --&gt;|Queue Tasks| MQ
+            end
+        end
+    end
+    </pre></section>
+<section id="network-and-hosting-details">
+<h2>7.3 Network and Hosting Details<a class="headerlink" href="#network-and-hosting-details" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>All services are deployed in Docker containers.</p></li>
+<li><p>The Nginx reverse proxy exposes public services using HTTPS (port 443).</p></li>
+<li><p>Internal communication happens within the Docker network.</p></li>
+<li><p>Persistent data (DB, MinIO, MLflow) is stored in Docker volumes.</p></li>
+<li><p>There is a staging and a production view of the services.</p></li>
+</ul>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Deployment Services</span><a class="headerlink" href="#id1" title="Link to this table"></a></caption>
+<colgroup>
+<col style="width: 23.8%" />
+<col style="width: 38.1%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 9.5%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Service</strong></p></th>
+<th class="head"><p><strong>Host/URL - Production</strong></p></th>
+<th class="head"><p><strong>Host/URL - Staging</strong></p></th>
+<th class="head"><p><strong>Port</strong></p></th>
+<th class="head"><p><strong>Exposed?</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Nginx Proxy</p></td>
+<td><p>/</p></td>
+<td><p>/</p></td>
+<td><p>443</p></td>
+<td><p>Privat</p></td>
+</tr>
+<tr class="row-odd"><td><p>RabbitMQ</p></td>
+<td><p><cite>https://rabbitmq.mlops.dns64.de/</cite></p></td>
+<td><p><cite>https://rabbitmq.staging.mlops.iot64.de/</cite></p></td>
+<td><p>15672</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td><p>PostgreSQL</p></td>
+<td><p><cite>postgres</cite></p></td>
+<td><p><cite>postgres</cite></p></td>
+<td><p>5432</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-odd"><td><p>MinIO</p></td>
+<td><p><cite>https://s3.mlops.iot64.de/</cite></p></td>
+<td><p><cite>https://s3.staging.mlops.iot64.de/</cite></p></td>
+<td><p>9001</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td><p>MLflow</p></td>
+<td><p><cite>https://mlflow.mlops.iot64.de/</cite></p></td>
+<td><p><cite>https://mlflow.staging.mlops.iot64.de/</cite></p></td>
+<td><p>5000</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td><p>Prometheus</p></td>
+<td><p>/</p></td>
+<td><p>/</p></td>
+<td><p>9090</p></td>
+<td><p>Private</p></td>
+</tr>
+<tr class="row-even"><td><p>Grafana</p></td>
+<td><p><cite>https://monitoring.mlops.iot64.de/</cite></p></td>
+<td><p><cite>https://monitoring.staging.mlops.iot64.de/</cite></p></td>
+<td><p>3000</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-odd"><td><p>FastAPI Backend</p></td>
+<td><p><cite>https://api.mlops.dns64.de/</cite></p></td>
+<td><p><cite>https://api.staging.mlops.dns64.de/</cite></p></td>
+<td><p>8000</p></td>
+<td><p>Public</p></td>
+</tr>
+<tr class="row-even"><td><p>Streamlit UI</p></td>
+<td><p><cite>https://app.mlops.dns64.de/</cite></p></td>
+<td><p><cite>https://app.staging.mlops.dns64.de/</cite></p></td>
+<td><p>8501</p></td>
+<td><p>Public</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="architecture-decisions">
-<h1>Architecture Decisions<a class="headerlink" href="#architecture-decisions" title="Link to this heading"></a></h1>
+<section id="deployment-process">
+<h2>7.4 Deployment Process<a class="headerlink" href="#deployment-process" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>CI/CD Pipeline</p></li>
+</ol>
+<ul class="simple">
+<li><p>All services are built and published as Docker images via GitHub Actions.</p></li>
+<li><p>Images are pushed to GitHub Container Registry (GHCR).</p></li>
+<li><p>The latest version is deployed using Docker Compose.</p></li>
+<li><p>Startup Sequence</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Nginx Proxy starts first.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Database (PostgreSQL) and RabbitMQ must be ready before application services start.</p></li>
+<li><p>MinIO (S3 storage) must be running before MLflow can store artifacts.</p></li>
+<li><p>Monitoring &amp; Logging</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Prometheus collects system metrics.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Loki stores logs from all services.</p></li>
+<li><p>Tempo handles distributed tracing.</p></li>
+<li><p>Grafana visualizes logs, metrics, and traces.</p></li>
+</ul>
 </section>
-<section id="quality-requirements">
-<h1>Quality Requirements<a class="headerlink" href="#quality-requirements" title="Link to this heading"></a></h1>
+<section id="scaling-and-future-improvements">
+<h2>7.5 Scaling and Future Improvements<a class="headerlink" href="#scaling-and-future-improvements" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>The system can be extended to Kubernetes for better scalability.</p></li>
+<li><p>A load balancer can distribute API requests for high availability.</p></li>
+<li><p>Auto-scaling workers can be introduced for handling data processing.</p></li>
+</ul>
 </section>
-<section id="risks-and-technical-debt">
-<h1>Risks and Technical Debt<a class="headerlink" href="#risks-and-technical-debt" title="Link to this heading"></a></h1>
-</section>
-<section id="glossary">
-<h1>Glossary<a class="headerlink" href="#glossary" title="Link to this heading"></a></h1>
 </section>
 
 
@@ -117,7 +272,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="runtime_view.html" class="btn btn-neutral float-left" title="6. Runtime View" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="services.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="crosscutting_concepts.html" class="btn btn-neutral float-right" title="8. Crosscutting Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

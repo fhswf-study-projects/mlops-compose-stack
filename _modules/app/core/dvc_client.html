@@ -19,6 +19,14 @@
       <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../../../_static/copybutton.js?v=f281be69"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+      <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+      <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+      <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -51,15 +59,12 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../solution_strategy.html">4. Solution Strategy</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../building_block_view.html">5. Building Block View</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../runtime_view.html">6. Runtime View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html">Deployment View</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html#crosscutting-concepts">Crosscutting Concepts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html#architecture-decisions">Architecture Decisions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html#quality-requirements">Quality Requirements</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html#risks-and-technical-debt">Risks and Technical Debt</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html#glossary">Glossary</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Services:</span></p>
-<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../deployment_view.html">7. Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../crosscutting_concepts.html">8. Crosscutting Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../architecture_decisions.html">9. Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../quality.html">10. Quality Requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../risks_and_technical_debt.html">11. Risks and Technical Debt</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../glossary.html">12. Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../data-processor/modules.html">Data-Processor</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../streamlit-ui/modules.html">Streamlit-UI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../pipeline-api/modules.html">Pipeline-API</a></li>
@@ -134,7 +139,17 @@
 
 <div class="viewcode-block" id="DVCClient.read_data_from">
 <a class="viewcode-back" href="../../../pipeline-api/app.core.html#app.core.dvc_client.DVCClient.read_data_from">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">read_data_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">bucket_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_data_from</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bucket_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="kc">None</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reads an object from a S3 bucket</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            source (str): Path under the object is available.</span>
+<span class="sd">            bucket_name (str, optional): Bucket name to upload to. Defaults to None.</span>
+<span class="sd">                If not provided, a default name from the environment space will be used.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Union[Any, None]: Downloaded (python) object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">obj</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bucket_name</span><span class="p">:</span>
             <span class="n">bucket_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">EnvConfig</span><span class="o">.</span><span class="n">S3_BUCKET_NAME</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
@@ -151,14 +166,17 @@
 
 <div class="viewcode-block" id="DVCClient.save_data_to">
 <a class="viewcode-back" href="../../../pipeline-api/app.core.html#app.core.dvc_client.DVCClient.save_data_to">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">save_data_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span> <span class="n">bucket_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">extra_args</span><span class="o">=</span><span class="p">{})</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload an object to an S3 bucket</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">save_data_to</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">destination</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bucket_name</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Upload an object to a S3 bucket</span>
 
-<span class="sd">        :param file_name: File to upload</span>
-<span class="sd">        :param bucket: Bucket to upload to</span>
-<span class="sd">        :param obj: Object to upload</span>
-<span class="sd">        :param object_name: S3 object name. If not specified then file_name is used</span>
-<span class="sd">        :return: True if file was uploaded, else False</span>
+<span class="sd">        Args:</span>
+<span class="sd">            obj (Any): Object to upload.</span>
+<span class="sd">            bucket_name (str, optional): Bucket name to upload to. Defaults to None.</span>
+<span class="sd">                If not provided, a default name from the environment space will be used.</span>
+<span class="sd">            destination (str): Location under the object should be saved.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">           bool: True if file was uploaded, else False.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">bucket_name</span><span class="p">:</span>
             <span class="n">bucket_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">EnvConfig</span><span class="o">.</span><span class="n">S3_BUCKET_NAME</span><span class="o">.</span><span class="n">value</span><span class="p">]</span>
@@ -188,7 +206,6 @@
                     <span class="n">Filename</span><span class="o">=</span><span class="n">tmp</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="n">Bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span>
                     <span class="n">Key</span><span class="o">=</span><span class="n">destination</span><span class="p">,</span>
-                    <span class="c1"># ExtraArgs=extra_args,</span>
                 <span class="p">)</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response: </span><span class="si">{</span><span class="n">response</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="n">tmp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
