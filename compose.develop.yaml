@@ -6,9 +6,6 @@ services:
 
   flower:
     image: mher/flower
-    networks:
-      - frontend
-      - backend
     environment:
       - VIRTUAL_HOST=celery.localhost
       - VIRTUAL_PORT=5555
