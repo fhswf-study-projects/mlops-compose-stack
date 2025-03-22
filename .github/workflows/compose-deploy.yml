@@ -122,7 +122,6 @@ jobs:
               up \
               -d \
               --no-deps \
-              --no-recreate \
               --pull "always" \
               --quiet-pull \
               --wait \
