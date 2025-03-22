@@ -105,6 +105,7 @@ services:
       - OTEL_PASSWORD=${OTEL_PASSWORD}
     volumes:
       - ./collector/collector-config.yaml:/otel-lgtm/otelcol-config.yaml
+      - ./configs/otel-lgtm/loki/loki-config.yaml:/otel-lgtm/loki-config.yaml
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - loki_data:/data/loki
       - grafana_data:/data/grafana
