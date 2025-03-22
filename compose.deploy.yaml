@@ -240,6 +240,7 @@ services:
       - OTEL_PASSWORD=${OTEL_PASSWORD}
       - PG_CELERY_DATABASE=${PG_CELERY_DATABASE}
       - PG_MLFLOW_DATABASE=${PG_MLFLOW_DATABASE}
+      - ENABLE_LOGS_ALL=true
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
       interval: 30s
