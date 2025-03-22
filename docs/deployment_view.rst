@@ -18,7 +18,7 @@ with automated Let's Encrypt SSL certificates.
 
 .. mermaid::
 
-    graph TD
+    graph TB
         subgraph Self-Hosted Server
             subgraph Docker Network
                 subgraph Reverse Proxy
@@ -28,14 +28,16 @@ with automated Let's Encrypt SSL certificates.
                 subgraph Core Services
                     DB[PostgreSQL]
                     MQ[RabbitMQ]
+                    DP[Data Processor]
                     S3[MinIO]
-                    MLflow[MLflow Server]
-                    Logs[Prometheus + Loki + Tempo + Mimir] --> Grafana[Grafana]
+                    MLflow[MLflow Server] --> |Save artifact and model| DB
+                    Logs[Prometheus + Loki + Tempo + Mimir - Logging and Metrics] --> Grafana[Grafana]
                 end
 
                 subgraph Application Services
                     UI[Streamlit UI] -->|API Calls| API[FastAPI Backend]
-                    API -->|Model Requests| DP[Data Processor]
+                    API -->|Model Requests| MQ
+                    MQ --> |Model Requsts| DP
                     DP -->|Fetch Model| MLflow
                     DP -->|Store Data| S3
                     API -->|Queue Tasks| MQ
@@ -68,8 +70,8 @@ with automated Let's Encrypt SSL certificates.
      - 443
      - Privat
    * - RabbitMQ
-     - `https://rabbitmq.mlops.dns64.de/`
-     - `https://rabbitmq.staging.mlops.iot64.de/`
+     - `https://rabbitmq.mlops.dns64.de/ <https://rabbitmq.mlops.dns64.de/>`_
+     - `https://rabbitmq.staging.mlops.iot64.de/ <https://rabbitmq.staging.mlops.iot64.de/>`_
      - 15672
      - Public
    * - PostgreSQL
@@ -78,13 +80,13 @@ with automated Let's Encrypt SSL certificates.
      - 5432
      - Private
    * - MinIO
-     - `https://s3.mlops.iot64.de/`
-     - `https://s3.staging.mlops.iot64.de/`
+     - `https://s3.mlops.dns64.de/ <https://s3.mlops.dns64.de/>`_
+     - `https://s3.staging.mlops.iot64.de/ <https://s3.staging.mlops.iot64.de/>`_
      - 9001
      - Public
    * - MLflow
-     - `https://mlflow.mlops.iot64.de/`
-     - `https://mlflow.staging.mlops.iot64.de/`
+     - `https://mlflow.mlops.dns64.de/ <https://mlflow.mlops.dns64.de/>`_
+     - `https://mlflow.staging.mlops.iot64.de/ <https://mlflow.staging.mlops.iot64.de/>`_
      - 5000
      - Public
    * - Prometheus
@@ -93,18 +95,18 @@ with automated Let's Encrypt SSL certificates.
      - 9090
      - Private
    * - Grafana
-     - `https://monitoring.mlops.iot64.de/`
-     - `https://monitoring.staging.mlops.iot64.de/`
+     - `https://monitoring.mlops.dns64.de/ <https://monitoring.mlops.dns64.de/>`_
+     - `https://monitoring.staging.mlops.iot64.de/ <https://monitoring.staging.mlops.iot64.de/>`_
      - 3000
      - Public
    * - FastAPI Backend
-     - `https://api.mlops.dns64.de/`
-     - `https://api.staging.mlops.dns64.de/`
+     - `https://api.mlops.dns64.de/docs <https://api.mlops.dns64.de/docs>`_
+     - `https://api.staging.mlops.iot64.de/docs <https://api.staging.mlops.iot64.de/docs>`_
      - 8000
      - Public
    * - Streamlit UI
-     - `https://app.mlops.dns64.de/`
-     - `https://app.staging.mlops.dns64.de/`
+     - `https://app.mlops.dns64.de/ <https://app.mlops.dns64.de/>`_
+     - `https://app.staging.mlops.iot64.de/ <https://app.staging.mlops.iot64.de/>`_
      - 8501
      - Public
 
