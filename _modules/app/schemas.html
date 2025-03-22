@@ -144,6 +144,16 @@ window.addEventListener("load", () => mermaid.run());
 
 
 
+<div class="viewcode-block" id="FeedbackInputRequest">
+<a class="viewcode-back" href="../../streamlit-ui/app.html#app.schemas.FeedbackInputRequest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FeedbackInputRequest</span><span class="p">(</span><span class="n">UserInputRequest</span><span class="p">):</span>
+    <span class="n">task_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">income</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;&lt;=50K&quot;</span><span class="p">,</span> <span class="s2">&quot;&gt;50K&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="o">...</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Income class (true label)&quot;</span>
+    <span class="p">)</span></div>
+
+
+
 <div class="viewcode-block" id="FileMetadataResponse">
 <a class="viewcode-back" href="../../streamlit-ui/app.html#app.schemas.FileMetadataResponse">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FileMetadataResponse</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>

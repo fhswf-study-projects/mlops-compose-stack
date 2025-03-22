@@ -124,7 +124,7 @@ with automated Let’s Encrypt SSL certificates.</p>
 <section id="deployment-diagram">
 <h2>7.2 Deployment Diagram<a class="headerlink" href="#deployment-diagram" title="Link to this heading"></a></h2>
 <pre  class="mermaid">
-        graph TD
+        graph TB
     subgraph Self-Hosted Server
         subgraph Docker Network
             subgraph Reverse Proxy
@@ -134,14 +134,16 @@ with automated Let’s Encrypt SSL certificates.</p>
             subgraph Core Services
                 DB[PostgreSQL]
                 MQ[RabbitMQ]
+                DP[Data Processor]
                 S3[MinIO]
-                MLflow[MLflow Server]
-                Logs[Prometheus + Loki + Tempo + Mimir] --&gt; Grafana[Grafana]
+                MLflow[MLflow Server] --&gt; |Save artifact and model| DB
+                Logs[Prometheus + Loki + Tempo + Mimir - Logging and Metrics] --&gt; Grafana[Grafana]
             end
 
             subgraph Application Services
                 UI[Streamlit UI] --&gt;|API Calls| API[FastAPI Backend]
-                API --&gt;|Model Requests| DP[Data Processor]
+                API --&gt;|Model Requests| MQ
+                MQ --&gt; |Model Requsts| DP
                 DP --&gt;|Fetch Model| MLflow
                 DP --&gt;|Store Data| S3
                 API --&gt;|Queue Tasks| MQ
@@ -183,8 +185,8 @@ with automated Let’s Encrypt SSL certificates.</p>
 <td><p>Privat</p></td>
 </tr>
 <tr class="row-odd"><td><p>RabbitMQ</p></td>
-<td><p><cite>https://rabbitmq.mlops.dns64.de/</cite></p></td>
-<td><p><cite>https://rabbitmq.staging.mlops.iot64.de/</cite></p></td>
+<td><p><a class="reference external" href="https://rabbitmq.mlops.dns64.de/">https://rabbitmq.mlops.dns64.de/</a></p></td>
+<td><p><a class="reference external" href="https://rabbitmq.staging.mlops.iot64.de/">https://rabbitmq.staging.mlops.iot64.de/</a></p></td>
 <td><p>15672</p></td>
 <td><p>Public</p></td>
 </tr>
@@ -195,14 +197,14 @@ with automated Let’s Encrypt SSL certificates.</p>
 <td><p>Private</p></td>
 </tr>
 <tr class="row-odd"><td><p>MinIO</p></td>
-<td><p><cite>https://s3.mlops.iot64.de/</cite></p></td>
-<td><p><cite>https://s3.staging.mlops.iot64.de/</cite></p></td>
+<td><p><a class="reference external" href="https://s3.mlops.dns64.de/">https://s3.mlops.dns64.de/</a></p></td>
+<td><p><a class="reference external" href="https://s3.staging.mlops.iot64.de/">https://s3.staging.mlops.iot64.de/</a></p></td>
 <td><p>9001</p></td>
 <td><p>Public</p></td>
 </tr>
 <tr class="row-even"><td><p>MLflow</p></td>
-<td><p><cite>https://mlflow.mlops.iot64.de/</cite></p></td>
-<td><p><cite>https://mlflow.staging.mlops.iot64.de/</cite></p></td>
+<td><p><a class="reference external" href="https://mlflow.mlops.dns64.de/">https://mlflow.mlops.dns64.de/</a></p></td>
+<td><p><a class="reference external" href="https://mlflow.staging.mlops.iot64.de/">https://mlflow.staging.mlops.iot64.de/</a></p></td>
 <td><p>5000</p></td>
 <td><p>Public</p></td>
 </tr>
@@ -213,20 +215,20 @@ with automated Let’s Encrypt SSL certificates.</p>
 <td><p>Private</p></td>
 </tr>
 <tr class="row-even"><td><p>Grafana</p></td>
-<td><p><cite>https://monitoring.mlops.iot64.de/</cite></p></td>
-<td><p><cite>https://monitoring.staging.mlops.iot64.de/</cite></p></td>
+<td><p><a class="reference external" href="https://monitoring.mlops.dns64.de/">https://monitoring.mlops.dns64.de/</a></p></td>
+<td><p><a class="reference external" href="https://monitoring.staging.mlops.iot64.de/">https://monitoring.staging.mlops.iot64.de/</a></p></td>
 <td><p>3000</p></td>
 <td><p>Public</p></td>
 </tr>
 <tr class="row-odd"><td><p>FastAPI Backend</p></td>
-<td><p><cite>https://api.mlops.dns64.de/</cite></p></td>
-<td><p><cite>https://api.staging.mlops.dns64.de/</cite></p></td>
+<td><p><a class="reference external" href="https://api.mlops.dns64.de/docs">https://api.mlops.dns64.de/docs</a></p></td>
+<td><p><a class="reference external" href="https://api.staging.mlops.iot64.de/docs">https://api.staging.mlops.iot64.de/docs</a></p></td>
 <td><p>8000</p></td>
 <td><p>Public</p></td>
 </tr>
 <tr class="row-even"><td><p>Streamlit UI</p></td>
-<td><p><cite>https://app.mlops.dns64.de/</cite></p></td>
-<td><p><cite>https://app.staging.mlops.dns64.de/</cite></p></td>
+<td><p><a class="reference external" href="https://app.mlops.dns64.de/">https://app.mlops.dns64.de/</a></p></td>
+<td><p><a class="reference external" href="https://app.staging.mlops.iot64.de/">https://app.staging.mlops.iot64.de/</a></p></td>
 <td><p>8501</p></td>
 <td><p>Public</p></td>
 </tr>
